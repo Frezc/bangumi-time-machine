@@ -3,4 +3,7 @@
 个人学习制作
 
 ##using libs
-https://github.com/hdodenhof/CircleImageView
+[CircleImageView](https://github.com/hdodenhof/CircleImageView)
+[Volley](https://android.googlesource.com/platform/frameworks/volley)
+[Gson](https://github.com/google/gson)
+
