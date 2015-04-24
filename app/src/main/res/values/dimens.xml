@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Drawer Dimens-->
+    <dimen name="drawer_width">300dp</dimen>
+    <dimen name="drawer_header_height">164dp</dimen>
+    <dimen name="drawer_header_photowidth">64dp</dimen>
+    <dimen name="drawer_header_photomargin">16dp</dimen>
+</resources>

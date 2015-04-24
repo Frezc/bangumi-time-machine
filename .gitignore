@@ -1,0 +1,12 @@
+.gradle
+/local.properties
+/.idea/libraries
+.DS_Store
+/build
+
+BangumiTimeMachine.iws
+BangumiTimeMachine.iml
+BangumiTimeMachine.ipr
+app/app.iml
+app/proguard-rules.pro
+.idea

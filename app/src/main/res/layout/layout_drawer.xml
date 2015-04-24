@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="@dimen/drawer_width"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <ImageView android:id="@+id/drawer_header_cover"
+                        android:layout_width="wrap_content"
+                           android:layout_height="@dimen/drawer_header_height"
+                           android:layout_alignParentTop="true"
+                           android:layout_alignParentLeft="true"
+                           android:layout_alignParentStart="true"
+                           android:layout_alignParentBottom="false"
+                           android:layout_alignParentRight="true"
+                           android:layout_alignParentEnd="true"
+                        android:src="@mipmap/mat2"
+                        android:scaleType="fitXY"/>
+
+                <frezc.bangumitimemachine.app.ui.customview.CircleImageView
+                        android:layout_width="@dimen/drawer_header_photowidth"
+                           android:layout_height="@dimen/drawer_header_photowidth"
+                           android:layout_alignParentLeft="true"
+                           android:layout_alignParentStart="true"
+                           android:layout_alignParentTop="true"
+                           android:layout_marginLeft="@dimen/drawer_header_photomargin"
+                           android:layout_marginStart="@dimen/drawer_header_photomargin"
+                           android:layout_marginTop="@dimen/drawer_header_photomargin"
+                        app:border_width="2dp" app:border_color="#ffffff"
+                        android:id="@+id/user_photo" android:src="@drawable/photo2"/>
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
