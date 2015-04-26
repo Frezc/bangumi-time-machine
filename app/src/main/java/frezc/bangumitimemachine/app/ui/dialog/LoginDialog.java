@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.*;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.JsonSyntaxException;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.LoginUser;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
@@ -36,6 +37,7 @@ public class LoginDialog extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setStyle(STYLE_NO_TITLE,0);
+        netWorkTool = NetWorkTool.getInstance(getActivity());
         super.onCreate(savedInstanceState);
     }
 
@@ -54,6 +56,7 @@ public class LoginDialog extends DialogFragment
 
         tvLoginFail = (TextView) v.findViewById(R.id.login_fail);
         loginButton = (Button) v.findViewById(R.id.login_comfirm);
+        loginButton.setOnClickListener(this);
         loginProgress = (ProgressBar) v.findViewById(R.id.login_wait);
 
     }
@@ -63,6 +66,7 @@ public class LoginDialog extends DialogFragment
         switch (v.getId()){
             case R.id.login_comfirm:
                 if(!checkAvailable()){
+                    setError("用户名或密码格式不正确");
                     return;
                 }
 
@@ -87,13 +91,24 @@ public class LoginDialog extends DialogFragment
 
     //本地简单检查合法性
     private boolean checkAvailable() {
-        return true;
+        username = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+        if(username == null || password == null || username.isEmpty() || password.length()<8){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     //登录成功
     @Override
     public void onResponse(LoginUser loginUser) {
-
+        if(loginUser.getAuth() == null) {
+            setError("用户名或密码错误");
+        }else {
+            Toast.makeText(getActivity(), "登录成功 " + loginUser.getNickname(), Toast.LENGTH_SHORT).show();
+            dismiss();
+        }
     }
 
     //登录失败
@@ -106,12 +121,15 @@ public class LoginDialog extends DialogFragment
         loginProgress.setVisibility(View.INVISIBLE);
         loginButton.setVisibility(View.VISIBLE);
         loginButton.setText("重试");
+        tvLoginFail.setVisibility(View.VISIBLE);
         tvLoginFail.setText(errorMsg);
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        if(basicAuth != null) {
+            basicAuth.cancel();
+        }
         super.onDismiss(dialog);
-        basicAuth.cancel();
     }
 }

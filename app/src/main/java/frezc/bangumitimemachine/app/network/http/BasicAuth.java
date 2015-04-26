@@ -45,6 +45,6 @@ public class BasicAuth {
 
     public String getBASE64(String s){
         if(s == null) return null;
-        return Base64.encodeToString(s.getBytes(),Base64.DEFAULT);
+        return new String(Base64.encode(s.getBytes(),Base64.DEFAULT));
     }
 }
