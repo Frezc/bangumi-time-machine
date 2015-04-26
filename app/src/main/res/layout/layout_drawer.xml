@@ -3,12 +3,20 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/drawer_width"
                 android:layout_height="match_parent"
-                android:background="#ffffff">
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+                android:background="#fafafa">
+    <ScrollView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:overScrollMode="never">
 
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 >
                 <ImageView android:id="@+id/drawer_header_cover"
                         android:layout_width="wrap_content"
@@ -32,8 +40,51 @@
                            android:layout_marginStart="@dimen/drawer_header_photomargin"
                            android:layout_marginTop="@dimen/drawer_header_photomargin"
                         app:border_width="2dp" app:border_color="#ffffff"
-                        android:id="@+id/user_photo" android:src="@drawable/photo2"/>
+                        android:id="@+id/user_photo" android:src="@mipmap/photo2"/>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_alignBottom="@id/drawer_header_cover"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="frezc"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:textSize="14sp"
+                        android:textColor="#ffffff"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="504021398@qq.com"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:textSize="14sp"
+                        android:textColor="#ffffff"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/drawer_header_cover"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                
+            </LinearLayout>
         </RelativeLayout>
+
+
 
     </ScrollView>
 

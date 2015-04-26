@@ -24,7 +24,7 @@ public class BasicAuth {
         authHeaders.put("Accept-Encoding","gzip");
         authHeaders.put("User-Agent", "android-async-http/1.4.1 (http://loopj.com/android-async-http)");
         authHeaders.put("Authorization", "Basic "+getBASE64(username+":"+password));
-        gsonRequest = new GsonRequest<LoginUser>(Request.Method.POST, "http://api.bgm.tv/auth?source=BGMbyYumeProject",
+        gsonRequest = new GsonRequest<LoginUser>(Request.Method.POST, NetParams.AUTH_URL,
                 LoginUser.class, authHeaders, successListener, errorListener);
     }
 

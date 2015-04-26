@@ -18,9 +18,11 @@ import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
+import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity
+    implements View.OnClickListener{
     private Toolbar toolbar;
     private ImageView photo;
 
@@ -63,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
         toolbar.setOnMenuItemClickListener(onMenuItemClick);
 
         photo = (ImageView) findViewById(R.id.user_photo);
-
+        photo.setOnClickListener(this);
     }
 
 
@@ -74,4 +76,9 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        LoginDialog ld = new LoginDialog();
+        ld.show(getSupportFragmentManager(), "dialog_login");
+    }
 }

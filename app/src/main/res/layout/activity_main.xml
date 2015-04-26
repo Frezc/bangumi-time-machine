@@ -2,7 +2,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".MainActivity">
+                tools:context=".MainActivity"
+                android:background="@color/back_color">
     <RelativeLayout
             android:layout_width="match_parent" android:layout_height="match_parent">
         <android.support.v7.widget.Toolbar
@@ -10,8 +11,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:elevation="4dp">
+                android:background="@drawable/actionbar_background"
+                android:elevation="4dp"
+                >
                 <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:src="@drawable/abc_ic_clear_mtrl_alpha"/>
         </android.support.v7.widget.Toolbar>

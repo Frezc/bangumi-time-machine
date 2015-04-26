@@ -6,6 +6,24 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:dialogTitle">false</item>
     </style>
 
+    <style name="BaseActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    </style>
+
+    <style name="SectionTitle">
+        <item name="android:textColor">@color/bangumi_pink</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="Section">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PinkButton" parent="Section">
+        <item name="android:background">@drawable/roundrect_button</item>
+    </style>
 </resources>
