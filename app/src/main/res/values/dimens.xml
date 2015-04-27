@@ -7,5 +7,7 @@
     <dimen name="drawer_header_height">180dp</dimen>
     <dimen name="drawer_header_photowidth">64dp</dimen>
     <dimen name="drawer_header_photomargin">16dp</dimen>
-
+    <!-- Section Dimens-->
+    <dimen name="section_height">48dp</dimen>
+    <dimen name="section_image_width">40dp</dimen>
 </resources>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
@@ -25,6 +26,7 @@ public class MainActivity extends ActionBarActivity
     implements View.OnClickListener{
     private Toolbar toolbar;
     private ImageView photo;
+    private MyApplication app;
 
     private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
@@ -51,6 +53,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        app = (MyApplication) getApplication();
         initView();
     }
 
@@ -78,7 +81,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onClick(View v) {
-        LoginDialog ld = new LoginDialog();
-        ld.show(getSupportFragmentManager(), "dialog_login");
+        switch (v.getId()) {
+            case R.id.user_photo:
+                if(app.isUserLogin()) {
+
+                }else {
+                    LoginDialog ld = new LoginDialog();
+                    ld.show(getSupportFragmentManager(), "dialog_login");
+                }
+                break;
+        }
     }
 }

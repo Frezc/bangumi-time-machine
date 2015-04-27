@@ -9,5 +9,4 @@ import java.util.Map;
  */
 public class NetParams {
     public static final String AUTH_URL = "http://api.bgm.tv/auth?source=BGMbyYumeProject";
-
 }

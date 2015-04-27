@@ -19,8 +19,8 @@ public class ScanlineAnimView extends SurfaceView
     private SurfaceHolder holder;
     private GradientDrawable gradientDrawable =
             new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{0xffffff,0xffF8F8F8});
-    private int position = 0;
+                    new int[]{0xffF8F8F8,0xffF09199});
+
 
     private DrawThread drawThread = new DrawThread();
 
@@ -43,6 +43,9 @@ public class ScanlineAnimView extends SurfaceView
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Canvas canvas = holder.lockCanvas();
+        canvas.drawColor(0xffF8F8F8);
+        holder.unlockCanvasAndPost(canvas);
         drawThread.running=true;
         drawThread.start();
     }
@@ -57,7 +60,8 @@ public class ScanlineAnimView extends SurfaceView
         boolean running;
         Rect dirty = new Rect(0,0,0,0);
         int top=0,bottom=0;
-        int speed = 6;
+        int speed = 12;
+        int position = 0;
 
         @Override
         public void run() {
@@ -72,7 +76,7 @@ public class ScanlineAnimView extends SurfaceView
                 }else {
                     bottom = position;
                 }
-                gradientDrawable.setBounds(0, position - 300, getMeasuredWidth(), position);
+                gradientDrawable.setBounds(0, top+speed, getMeasuredWidth(), position);
                 dirty.set(0,top,getMeasuredWidth(),bottom);
                 //清空
                 canvas = holder.lockCanvas(dirty);
