@@ -1,32 +1,36 @@
 package frezc.bangumitimemachine.app.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.widget.EditText;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
-import frezc.bangumitimemachine.app.entity.User;
-import frezc.bangumitimemachine.app.network.http.BasicAuth;
-import frezc.bangumitimemachine.app.network.http.NetWorkTool;
+import frezc.bangumitimemachine.app.ui.customview.DivisorView;
+import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
 import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
+import frezc.bangumitimemachine.app.ui.drawer.Section;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-    implements View.OnClickListener{
+    implements View.OnClickListener, Section.OnClickListener{
     private Toolbar toolbar;
     private ImageView photo;
+    private LinearLayout sectionContainter;
     private MyApplication app;
+
+    private List<Section> sectionList = new ArrayList<Section>();
+    private int sectionOrder;
 
     private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
@@ -55,6 +59,9 @@ public class MainActivity extends ActionBarActivity
 
         app = (MyApplication) getApplication();
         initView();
+        initSections();
+
+        LinearLayout linearLayout = new LinearLayout(this);
     }
 
     private void initView() {
@@ -69,8 +76,73 @@ public class MainActivity extends ActionBarActivity
 
         photo = (ImageView) findViewById(R.id.user_photo);
         photo.setOnClickListener(this);
+
+        sectionContainter = (LinearLayout) findViewById(R.id.section_container);
+
     }
 
+    /**
+     * init drawer list
+     */
+    private void initSections() {
+        sectionList.clear();
+        sectionOrder = 0;
+        Section searcherSection = new Section(this, Section.TYPE_SECTION_ICON,
+                "搜索", R.mipmap.ic_search_grey600_24dp, UIParams.PAGE_SEARCHER);
+        searcherSection.setOnClickListener(this);
+
+        Section animeSection = new Section(this, Section.TYPE_SECTION, "动画", UIParams.PAGE_ANIME);
+        animeSection.setOnClickListener(this);
+
+        //...
+        sectionList.add(searcherSection);
+        sectionList.add(animeSection);
+
+        //add sections
+        addToDrawer(Section.TYPE_SUBHEADER, "main");
+        addToDrawer(Section.TYPE_SECTION, null);
+        addToDrawer(Section.TYPE_DIVISOR, null);
+        addToDrawer(Section.TYPE_SECTION, null);
+    }
+
+    /**
+     * add section or divisor or subheader to drawer
+     * @param type TYPE_SECTION TYPE_DIVISOR TYPE_SUBHEADER
+     * @param title only be used when type is TYPE_SUBHEADER
+     */
+    private void addToDrawer(int type, @Nullable String title){
+        switch (type){
+            case Section.TYPE_SECTION:
+                if(sectionOrder < sectionList.size()){
+                    LinearLayout.LayoutParams params =
+                            new LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (48 * UIParams.density));
+                    sectionContainter.addView(sectionList.get(sectionOrder++).getView(),params);
+                }else {
+                    throw new IndexOutOfBoundsException("There is no more sections");
+                }
+                break;
+
+            case Section.TYPE_DIVISOR:
+                View view = new DivisorView(this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,1);
+                params.setMargins(0,(int)(8 * UIParams.density), 0, (int)(8 * UIParams.density));
+                sectionContainter.addView(view, params);
+                break;
+
+            case Section.TYPE_SUBHEADER:
+                if(title == null){
+                    title = "Default";
+                }
+                SubheaderView subheader = new SubheaderView(this, title);
+                sectionContainter.addView(subheader);
+                break;
+
+            default:
+                throw new IllegalArgumentException("No such Type");
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,6 +161,35 @@ public class MainActivity extends ActionBarActivity
                     LoginDialog ld = new LoginDialog();
                     ld.show(getSupportFragmentManager(), "dialog_login");
                 }
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v, int tag) {
+        switch (tag){
+            case UIParams.PAGE_ANIME:
+
+                break;
+
+            case UIParams.PAGE_BOOK:
+
+                break;
+
+            case UIParams.PAGE_MUSIC:
+
+                break;
+
+            case UIParams.PAGE_GAME:
+
+                break;
+
+            case UIParams.PAGE_REALITY:
+
+                break;
+
+            case UIParams.PAGE_SEARCHER:
+
                 break;
         }
     }

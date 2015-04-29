@@ -1,5 +1,5 @@
 
-<resources>
+<resources >
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
@@ -7,6 +7,8 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:dialogTitle">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="subheaderTitleColor">#ffc7cdc7</item>
     </style>
 
     <style name="BaseActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -26,4 +28,5 @@
     <style name="PinkButton" parent="Section">
         <item name="android:background">@drawable/roundrect_button</item>
     </style>
+
 </resources>
