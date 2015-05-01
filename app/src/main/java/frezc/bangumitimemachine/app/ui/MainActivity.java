@@ -2,6 +2,8 @@ package frezc.bangumitimemachine.app.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,15 +25,20 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-    implements View.OnClickListener, Section.OnClickListener{
+    implements View.OnClickListener, Section.OnSelectListener{
     private Toolbar toolbar;
     private ImageView photo;
     private LinearLayout sectionContainter;
     private MyApplication app;
+    private DrawerLayout drawerLayout;
 
     private List<Section> sectionList = new ArrayList<Section>();
+    private Section selectSection = null;
     private int sectionOrder;
 
+    /**
+     * toolbar的菜单点击事件
+     */
     private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
@@ -78,7 +85,7 @@ public class MainActivity extends ActionBarActivity
         photo.setOnClickListener(this);
 
         sectionContainter = (LinearLayout) findViewById(R.id.section_container);
-
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
     }
 
     /**
@@ -89,9 +96,11 @@ public class MainActivity extends ActionBarActivity
         sectionOrder = 0;
         Section searcherSection = new Section(this, Section.TYPE_SECTION_ICON,
                 "搜索", R.mipmap.ic_search_grey600_24dp, UIParams.PAGE_SEARCHER);
+        searcherSection.setColorSelectedSection(0xffF09199);
         searcherSection.setOnClickListener(this);
 
         Section animeSection = new Section(this, Section.TYPE_SECTION, "我的动画", UIParams.PAGE_ANIME);
+        animeSection.setColorSelectedSection(0xffF09199);
         animeSection.setOnClickListener(this);
 
 
@@ -103,6 +112,10 @@ public class MainActivity extends ActionBarActivity
         addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_DIVISOR, null);
         addToDrawer(Section.TYPE_SECTION, null);
+
+        //初始选中section
+        searcherSection.select();
+        selectSection = searcherSection;
     }
 
     /**
@@ -163,13 +176,19 @@ public class MainActivity extends ActionBarActivity
                 }
                 break;
         }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override
-    public void onClick(Section section) {
+    public void onSelect(Section section) {
+        selectSection.unselect();
+        selectSection = section;
+        section.select();
+
         switch (section.getTag()){
             case UIParams.PAGE_ANIME:
-
+                Toast.makeText(this,"我的动画", Toast.LENGTH_SHORT).show();
                 break;
 
             case UIParams.PAGE_BOOK:
@@ -189,8 +208,10 @@ public class MainActivity extends ActionBarActivity
                 break;
 
             case UIParams.PAGE_SEARCHER:
-
+                Toast.makeText(this,"搜索", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 }

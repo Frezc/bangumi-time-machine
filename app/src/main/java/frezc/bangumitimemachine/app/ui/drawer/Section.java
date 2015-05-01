@@ -3,6 +3,9 @@ package frezc.bangumitimemachine.app.ui.drawer;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import frezc.bangumitimemachine.app.R;
 import org.w3c.dom.Text;
 
@@ -30,8 +34,6 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
     private TextView textView = null;
     private TextView notificationView = null;
 
-    private String text;
-    private int notify = 0;
 
     //colors
     private int colorPressedBackground;
@@ -51,14 +53,14 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
     private int numberNotifications;
 
     private int tag;
-    private OnClickListener onClickListener = null;
+    private OnSelectListener onSelectListener = null;
 
-    public interface OnClickListener{
-        void onClick(Section section);
+    public interface OnSelectListener{
+        void onSelect(Section section);
     }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setOnClickListener(OnSelectListener onSelectListener) {
+        this.onSelectListener = onSelectListener;
     }
 
     public Section(Context context, int type, String text, int tag){
@@ -87,11 +89,13 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
         }
 
         textView = (TextView) rootView.findViewById(R.id.section_text);
+        textView.setText(text);
         notificationView = (TextView) rootView.findViewById(R.id.section_notification);
 
         this.tag = tag;
 
         rootView.setOnClickListener(this);
+        rootView.setOnTouchListener(this);
 
         //从主题设置里初始化变量
         Resources.Theme theme = context.getTheme();
@@ -154,11 +158,108 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
     }
 
     /**
+     * 设置未选中时的背景色
+     * @param colorNormalBackground
+     */
+    public void setColorNormalBackground(int colorNormalBackground) {
+        this.colorNormalBackground = colorNormalBackground;
+    }
+
+    /**
+     * 设置点击时的背景色
+     * @param colorPressedBackground
+     */
+    public void setColorPressedBackground(int colorPressedBackground) {
+        this.colorPressedBackground = colorPressedBackground;
+    }
+
+    /**
+     * 设置选中时的背景色
+     * @param colorSelectedBackground
+     */
+    public void setColorSelectedBackground(int colorSelectedBackground) {
+        this.colorSelectedBackground = colorSelectedBackground;
+    }
+
+    /**
+     * 设置字体
+     * @param typeface
+     */
+    public void setTypeface(Typeface typeface){
+        textView.setTypeface(typeface);
+        notificationView.setTypeface(typeface);
+    }
+
+    /**
+     * 设置section的文本
+     * @param text
+     */
+    public void setText(String text){
+        textView.setText(text);
+    }
+
+    /**
+     * 设置图标
+     * @param icon
+     */
+    public void setIcon(Drawable icon){
+        if(iconView != null){
+            iconView.setImageDrawable(icon);
+        }
+    }
+
+    public void setIcon(Bitmap icon){
+        if(iconView != null){
+            iconView.setImageBitmap(icon);
+        }
+    }
+
+    /**
+     * 得到根view
+     * @return
+     */
+    public View getView() {
+        return rootView;
+    }
+
+    /**
+     * 得到标志
+     * @return
+     */
+    public int getTag() {
+        return tag;
+    }
+
+    /**
+     * 得到section类型
+     * @return
+     */
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * 得到文本内容
+     * @return
+     */
+    public CharSequence getText(){
+        return textView.getText();
+    }
+
+    /**
      * 获得消息数量
      * @return
      */
     public int getNotifications(){
         return numberNotifications;
+    }
+
+    /**
+     * 得到选中后的主题色
+     * @return
+     */
+    public int getColorSelectedSection() {
+        return colorSelectedSection;
     }
 
     /**rootView的点击事件
@@ -167,10 +268,7 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
     @Override
     public void onClick(View v) {
         //可以添加点击效果
-
-        if(onClickListener != null){
-            onClickListener.onClick(this);
-        }
+        afterClick();
     }
 
     /**rootView的touch事件
@@ -192,18 +290,64 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
                 }
                 return true;
             case MotionEvent.ACTION_UP:
-                rootView.setBackgroundColor(colorSelectedBackground);
-
+                afterClick();
                 return true;
         }
         return false;
     }
 
-    public View getView() {
-        return rootView;
+    /**
+     * 点击后触发的函数
+     */
+    private void afterClick() {
+
+        select();
+
+        if(onSelectListener != null){
+            onSelectListener.onSelect(this);
+        }
     }
 
-    public int getTag() {
-        return tag;
+    /**
+     * section被选中
+     */
+    public void select(){
+        isSelected = true;
+
+        rootView.setBackgroundColor(colorSelectedBackground);
+        if(hasColorSelectedSection){
+            textView.setTextColor(colorSelectedSection);
+
+            //判断是否带icon
+            if(iconView != null){
+                iconView.setColorFilter(colorSelectedSection);
+                iconView.setAlpha(1f);
+            }
+        }
+    }
+
+    /**
+     * 取消select状态
+     */
+    public void unselect(){
+        isSelected = false;
+
+        rootView.setBackgroundColor(colorNormalBackground);
+        if(hasColorSelectedSection){
+            textView.setTextColor(textColor);
+
+            if(iconView != null){
+                iconView.setColorFilter(iconColor);
+                iconView.setAlpha(0.54f);
+            }
+        }
+    }
+
+    /**
+     * 是否被选中
+     * @return
+     */
+    public boolean isSelected(){
+        return isSelected;
     }
 }

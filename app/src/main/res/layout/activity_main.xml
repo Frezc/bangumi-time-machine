@@ -3,7 +3,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".MainActivity"
-                android:background="@color/back_color">
+                android:background="@color/back_color"
+                android:id="@+id/drawerlayout">
     <RelativeLayout
             android:layout_width="match_parent" android:layout_height="match_parent">
         <android.support.v7.widget.Toolbar
@@ -22,6 +23,6 @@
     <include android:layout_width="@dimen/drawer_width"
              android:layout_height="match_parent"
 
-            layout="@layout/layout_drawer" android:layout_gravity="start"/>
+            layout="@layout/layout_drawer" android:layout_gravity="left"/>
 
 </android.support.v4.widget.DrawerLayout>
