@@ -91,15 +91,15 @@ public class MainActivity extends ActionBarActivity
                 "搜索", R.mipmap.ic_search_grey600_24dp, UIParams.PAGE_SEARCHER);
         searcherSection.setOnClickListener(this);
 
-        Section animeSection = new Section(this, Section.TYPE_SECTION, "动画", UIParams.PAGE_ANIME);
+        Section animeSection = new Section(this, Section.TYPE_SECTION, "我的动画", UIParams.PAGE_ANIME);
         animeSection.setOnClickListener(this);
+
 
         //...
         sectionList.add(searcherSection);
         sectionList.add(animeSection);
 
         //add sections
-        addToDrawer(Section.TYPE_SUBHEADER, "main");
         addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_DIVISOR, null);
         addToDrawer(Section.TYPE_SECTION, null);
@@ -166,8 +166,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onClick(View v, int tag) {
-        switch (tag){
+    public void onClick(Section section) {
+        switch (section.getTag()){
             case UIParams.PAGE_ANIME:
 
                 break;

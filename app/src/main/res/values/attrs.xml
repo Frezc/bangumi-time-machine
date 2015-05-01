@@ -4,9 +4,22 @@
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
     </declare-styleable>
-    
-    <declare-styleable name="SubheaderView">
+
+    <declare-styleable name="Section">
+        <attr name="sectionColorIcon" format="color" />
+        <attr name="sectionColorText" format="color" />
+        <attr name="sectionColorNotification" format="color" />
+        <attr name="sectionBackgroundColorPressed" format="color" />
+        <attr name="sectionBackgroundColorSelected" format="color" />
+        <attr name="sectionBackgroundColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="Subheader">
         <attr name="subheaderTitleColor" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="MainDrawer">
+        <attr name="sectionStyle" format="reference" />
+        <attr name="subheaderStyle" format="reference"/>
+    </declare-styleable>
 </resources>

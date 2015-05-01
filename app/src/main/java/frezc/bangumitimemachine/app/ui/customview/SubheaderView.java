@@ -16,6 +16,7 @@ import frezc.bangumitimemachine.app.ui.UIParams;
  * Created by freeze on 2015/4/29.
  */
 public class SubheaderView extends LinearLayout {
+    //can be set in xml attr subheaderTitleColor
     private int titleColor;
     private TextView textView;
 
@@ -49,10 +50,13 @@ public class SubheaderView extends LinearLayout {
         // get subheader text color from theme
         Resources.Theme theme = context.getTheme();
         TypedValue typedValue = new TypedValue();
-        theme.resolveAttribute(R.attr.subheaderTitleColor, typedValue, true);
-        TypedArray values = theme.obtainStyledAttributes(typedValue.resourceId, R.styleable.SubheaderView);
-        titleColor = values.getColor(R.styleable.SubheaderView_subheaderTitleColor, 0xff000000);
-        values.recycle();
+        theme.resolveAttribute(R.attr.subheaderStyle, typedValue, true);
+        TypedArray values = theme.obtainStyledAttributes(typedValue.resourceId, R.styleable.Subheader);
+        try {
+            titleColor = values.getColor(R.styleable.Subheader_subheaderTitleColor, 0xff000000);
+        }finally {
+            values.recycle();
+        }
         textView.setTextColor(titleColor);
     }
 

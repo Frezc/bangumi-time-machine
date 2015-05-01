@@ -2,13 +2,39 @@
 <resources >
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="MainDrawerTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:dialogTitle">false</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="subheaderTitleColor">#ffc7cdc7</item>
+        <item name="subheaderStyle">@style/SubheaderTheme.Light</item>
+        <item name="sectionStyle">@style/SectionTheme.Light</item>
+    </style>
+
+    <style name="SectionTheme" >
+        <item name="sectionColorIcon">#FFF</item>
+        <item name="sectionColorText">#FFF</item>
+        <item name="sectionColorNotification">#FFF</item>
+        <item name="sectionBackgroundColorPressed">#16FFFFFF</item>
+        <item name="sectionBackgroundColorSelected">#0AFFFFFF</item>
+        <item name="sectionBackgroundColor">#00FFFFFF</item>
+    </style>
+
+    <style name="SectionTheme.Light" >
+        <item name="sectionColorIcon">#000000</item>
+        <item name="sectionColorText">#000000</item>
+        <item name="sectionColorNotification">#000000</item>
+        <item name="sectionBackgroundColorPressed">#16000000</item>
+        <item name="sectionBackgroundColorSelected">#0A000000</item>
+        <item name="sectionBackgroundColor">#00FFFFFF</item>
+    </style>
+
+    <style name="SubheaderTheme">
+        <item name="subheaderTitleColor">#FFF</item>
+    </style>
+
+    <style name="SubheaderTheme.Light">
+        <item name="subheaderTitleColor">#000</item>
     </style>
 
     <style name="BaseActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
