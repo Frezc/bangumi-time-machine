@@ -59,7 +59,7 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
         void onSelect(Section section);
     }
 
-    public void setOnClickListener(OnSelectListener onSelectListener) {
+    public void setOnSelectListener(OnSelectListener onSelectListener) {
         this.onSelectListener = onSelectListener;
     }
 
@@ -303,9 +303,6 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
 
         select();
 
-        if(onSelectListener != null){
-            onSelectListener.onSelect(this);
-        }
     }
 
     /**
@@ -323,6 +320,10 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
                 iconView.setColorFilter(colorSelectedSection);
                 iconView.setAlpha(1f);
             }
+        }
+
+        if(onSelectListener != null){
+            onSelectListener.onSelect(this);
         }
     }
 

@@ -5,6 +5,7 @@ package frezc.bangumitimemachine.app.entity;
  */
 public class Images {
     public String large;
+    public String common;
     public String medium;
     public String small;
     public String grid;

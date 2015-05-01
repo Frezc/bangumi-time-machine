@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -94,28 +95,35 @@ public class MainActivity extends ActionBarActivity
     private void initSections() {
         sectionList.clear();
         sectionOrder = 0;
+        Section homeSection = new Section(this, Section.TYPE_SECTION_ICON,
+                "主页", R.mipmap.ic_home_grey600_24dp, UIParams.PAGE_HOME);
+        homeSection.setColorSelectedSection(0xffF09199);
+        homeSection.setOnSelectListener(this);
+
         Section searcherSection = new Section(this, Section.TYPE_SECTION_ICON,
                 "搜索", R.mipmap.ic_search_grey600_24dp, UIParams.PAGE_SEARCHER);
         searcherSection.setColorSelectedSection(0xffF09199);
-        searcherSection.setOnClickListener(this);
+        searcherSection.setOnSelectListener(this);
 
         Section animeSection = new Section(this, Section.TYPE_SECTION, "我的动画", UIParams.PAGE_ANIME);
         animeSection.setColorSelectedSection(0xffF09199);
-        animeSection.setOnClickListener(this);
+        animeSection.setOnSelectListener(this);
 
 
         //...
+        sectionList.add(homeSection);
         sectionList.add(searcherSection);
         sectionList.add(animeSection);
 
         //add sections
         addToDrawer(Section.TYPE_SECTION, null);
+        addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_DIVISOR, null);
         addToDrawer(Section.TYPE_SECTION, null);
 
         //初始选中section
-        searcherSection.select();
-        selectSection = searcherSection;
+        homeSection.select();
+        selectSection = homeSection;
     }
 
     /**
@@ -182,6 +190,9 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onSelect(Section section) {
+        if(selectSection == section){
+            return;
+        }
         selectSection.unselect();
         selectSection = section;
         section.select();
@@ -209,6 +220,10 @@ public class MainActivity extends ActionBarActivity
 
             case UIParams.PAGE_SEARCHER:
                 Toast.makeText(this,"搜索", Toast.LENGTH_SHORT).show();
+                break;
+
+            case UIParams.PAGE_HOME:
+
                 break;
         }
 

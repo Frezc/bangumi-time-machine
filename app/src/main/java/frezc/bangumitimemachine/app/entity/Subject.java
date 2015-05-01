@@ -22,15 +22,6 @@ public class Subject {
     private int type;
     private String url;
 
-
-    public static class Images{
-        public String large;
-        public String common;
-        public String medium;
-        public  String small;
-        public String grid;
-    }
-
     public static class Collection{
         public int wish;
         public int collect;

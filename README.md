@@ -2,6 +2,9 @@
 
 个人学习制作
 
+##target
+- 放送时间表
+- 看过、在看、看完的列表
 
 ##using libs
 - [CircleImageView](https://github.com/hdodenhof/CircleImageView)

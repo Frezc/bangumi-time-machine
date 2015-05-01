@@ -6,6 +6,7 @@ package frezc.bangumitimemachine.app.ui;
 public class UIParams {
     public static float density = 1.0f;
 
+    public static final int PAGE_HOME = -1;
     public static final int PAGE_SEARCHER = 0;
     public static final int PAGE_ANIME = 1;
     public static final int PAGE_BOOK = 2;
