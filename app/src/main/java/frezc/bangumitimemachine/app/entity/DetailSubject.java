@@ -5,14 +5,20 @@ import java.util.List;
 /**
  * Created by freeze on 2015/4/24.
  */
-public class Subject {
+public class DetailSubject {
     private String air_date;
     private int air_weekday;
+    private List<Blog> blog;
     private Collection collection;
+    private List<Person> crt;
+    private List<Episode> eps;
     private int id;
     private Images images;
     private String name;
     private String name_cn;
+    private List<Staff> staff;
+    private String summary;
+    private List<Topic> topic;
     private int type;
     private String url;
 
@@ -40,12 +46,36 @@ public class Subject {
         this.air_weekday = air_weekday;
     }
 
+    public List<Blog> getBlog() {
+        return blog;
+    }
+
+    public void setBlog(List<Blog> blog) {
+        this.blog = blog;
+    }
+
     public Collection getCollection() {
         return collection;
     }
 
     public void setCollection(Collection collection) {
         this.collection = collection;
+    }
+
+    public List<Person> getCrt() {
+        return crt;
+    }
+
+    public void setCrt(List<Person> crt) {
+        this.crt = crt;
+    }
+
+    public List<Episode> getEps() {
+        return eps;
+    }
+
+    public void setEps(List<Episode> eps) {
+        this.eps = eps;
     }
 
     public int getId() {
@@ -78,6 +108,30 @@ public class Subject {
 
     public void setName_cn(String name_cn) {
         this.name_cn = name_cn;
+    }
+
+    public List<Staff> getStaff() {
+        return staff;
+    }
+
+    public void setStaff(List<Staff> staff) {
+        this.staff = staff;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public List<Topic> getTopic() {
+        return topic;
+    }
+
+    public void setTopic(List<Topic> topic) {
+        this.topic = topic;
     }
 
     public int getType() {

@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * Created by freeze on 2015/4/23.
+ * for Bangumi Auth
+ * 未加密
  */
 public class BasicAuth {
     private GsonRequest<LoginUser> gsonRequest;

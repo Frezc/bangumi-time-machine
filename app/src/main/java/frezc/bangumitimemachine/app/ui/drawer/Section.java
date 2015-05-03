@@ -303,6 +303,10 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
 
         select();
 
+        //回调函数
+        if(onSelectListener != null){
+            onSelectListener.onSelect(this);
+        }
     }
 
     /**
@@ -322,9 +326,6 @@ public class Section implements View.OnClickListener, View.OnTouchListener{
             }
         }
 
-        if(onSelectListener != null){
-            onSelectListener.onSelect(this);
-        }
     }
 
     /**

@@ -22,4 +22,13 @@
         <attr name="sectionStyle" format="reference" />
         <attr name="subheaderStyle" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="SubjectsCardView">
+        <attr name="title_text" format="string"/>
+        <attr name="title_textSize" format="dimension"/>
+        <attr name="title_textColor" format="color"/>
+        <attr name="title_background" format="color"/>
+        <attr name="container_background" format="color"/>
+        <attr name="subject_pressedColor" format="color" />
+    </declare-styleable>
 </resources>

@@ -5,4 +5,7 @@
     <color name="back_color">#F8F8F8</color>
     <color name="section_dark">#fafafa</color>
     <color name="section_normal">#fff</color>
+    
+    <!-- calendar colors -->
+
 </resources>

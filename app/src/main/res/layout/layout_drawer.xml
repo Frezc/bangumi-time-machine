@@ -40,7 +40,7 @@
                            android:layout_marginStart="@dimen/drawer_header_photomargin"
                            android:layout_marginTop="@dimen/drawer_header_photomargin"
                         app:border_width="2dp" app:border_color="#ffffff"
-                        android:id="@+id/user_photo" android:src="@mipmap/photo2"/>
+                        android:id="@+id/user_photo" android:src="@mipmap/ico_ios"/>
 
             <LinearLayout
                     android:layout_width="wrap_content"

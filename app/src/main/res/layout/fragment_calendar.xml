@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <LinearLayout android:id="@+id/calendar_subjects"
-                  android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="match_parent">
-    </LinearLayout>
-    <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:id="@+id/calendar_subjects"
+                      android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:visibility="invisible"
+                android:animateLayoutChanges="true">
+        </LinearLayout>
+    </ScrollView>
+    <ProgressBar android:id="@+id/progress"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="center"
             />
-</android.support.v4.widget.SwipeRefreshLayout>
+    <TextView android:id="@+id/error"
+              android:visibility="gone"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="加载失败desu" android:textSize="20sp"
+            android:layout_gravity="center"
+            />
+</FrameLayout>

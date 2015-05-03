@@ -2,8 +2,10 @@ package frezc.bangumitimemachine.app.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,15 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
+import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
 import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
 import frezc.bangumitimemachine.app.ui.drawer.Section;
+import frezc.bangumitimemachine.app.ui.fragment.CalendarFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +33,20 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity
     implements View.OnClickListener, Section.OnSelectListener{
     private Toolbar toolbar;
+    //头像
     private ImageView photo;
+    //侧边栏列表
     private LinearLayout sectionContainter;
     private MyApplication app;
     private DrawerLayout drawerLayout;
+    private FrameLayout mainContainer;
 
     private List<Section> sectionList = new ArrayList<Section>();
     private Section selectSection = null;
     private int sectionOrder;
+
+    private FragmentManager fragmentManager;
+    private CalendarFragment calendarFragment;
 
     /**
      * toolbar的菜单点击事件
@@ -68,8 +79,17 @@ public class MainActivity extends ActionBarActivity
         app = (MyApplication) getApplication();
         initView();
         initSections();
+        initFragment();
 
-        LinearLayout linearLayout = new LinearLayout(this);
+    }
+
+    private void initFragment() {
+        fragmentManager = getSupportFragmentManager();
+        //测试
+        calendarFragment = CalendarFragment.newInstance(this);
+        fragmentManager.beginTransaction()
+                .add(R.id.main_container,calendarFragment)
+                .commit();
     }
 
     private void initView() {
@@ -87,6 +107,8 @@ public class MainActivity extends ActionBarActivity
 
         sectionContainter = (LinearLayout) findViewById(R.id.section_container);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+
+        mainContainer = (FrameLayout) findViewById(R.id.main_container);
     }
 
     /**
