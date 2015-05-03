@@ -14,5 +14,6 @@ public class UIParams {
     public static final int PAGE_GAME = 4;
     public static final int PAGE_REALITY = 5;
 
-
+    //fragment tag
+    public static final String FRAGMENT_CALENDAR = "calendar";
 }

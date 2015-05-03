@@ -2,11 +2,11 @@ package frezc.bangumitimemachine.app.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
-import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
 import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
@@ -45,6 +44,7 @@ public class MainActivity extends ActionBarActivity
     private Section selectSection = null;
     private int sectionOrder;
 
+    private Fragment contentFragment;
     private FragmentManager fragmentManager;
     private CalendarFragment calendarFragment;
 
@@ -79,17 +79,26 @@ public class MainActivity extends ActionBarActivity
         app = (MyApplication) getApplication();
         initView();
         initSections();
-        initFragment();
+        initFragment(savedInstanceState==null);
 
     }
 
-    private void initFragment() {
+    private void initFragment(Boolean isInit) {
         fragmentManager = getSupportFragmentManager();
-        //测试
-        calendarFragment = CalendarFragment.newInstance(this);
-        fragmentManager.beginTransaction()
-                .add(R.id.main_container,calendarFragment)
-                .commit();
+        if(isInit) {
+            calendarFragment = CalendarFragment.newInstance(this);
+            contentFragment = calendarFragment;
+            fragmentManager.beginTransaction()
+                    .add(R.id.main_container, contentFragment, UIParams.FRAGMENT_CALENDAR)
+                    .commit();
+        }else {
+//            contentFragment = fragmentManager.findFragmentById(R.id.main_container);
+            calendarFragment = (CalendarFragment) fragmentManager.findFragmentByTag(UIParams.FRAGMENT_CALENDAR);
+
+            fragmentManager.beginTransaction()
+                    .show(calendarFragment)
+                    .commit();
+        }
     }
 
     private void initView() {
@@ -250,5 +259,20 @@ public class MainActivity extends ActionBarActivity
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    public void switchContent(Fragment from, Fragment to){
+        if(contentFragment != to){
+            contentFragment = to;
+            //添加动画
+            FragmentTransaction transaction = fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.slide_out_right);
+            if(to.isAdded()){
+                transaction.hide(from).show(to);
+            }else {
+                transaction.hide(from).add(R.id.main_container, to);
+            }
+            transaction.commit();
+        }
     }
 }

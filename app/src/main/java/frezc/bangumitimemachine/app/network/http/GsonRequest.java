@@ -42,7 +42,6 @@ public class GsonRequest<T> extends Request<T> {
     }
 
     /**
-     *
      * @param context for MainLooper
      * @param method
      * @param url
@@ -75,7 +74,7 @@ public class GsonRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
         try {
             String json;
-            if(networkResponse.headers.get("Content-Encoding").equals("gzip")) {
+            if("gzip".equals(networkResponse.headers.get("Content-Encoding"))) {
                 json = NetWorkTool.GZipDecoderToString(networkResponse.data);
             }else {
                 json = new String(networkResponse.data,

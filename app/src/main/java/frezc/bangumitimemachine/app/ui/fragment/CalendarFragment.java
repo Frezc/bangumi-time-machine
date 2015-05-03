@@ -39,6 +39,7 @@ public class CalendarFragment extends Fragment
     private LinearLayout calendarContainer;
     private ProgressBar progressBar;
     private TextView errorView;
+    private View rootView;
 
     private NetWorkTool netWorkTool;
     //请求头
@@ -62,10 +63,12 @@ public class CalendarFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
-        calendarContainer = (LinearLayout) rootView.findViewById(R.id.calendar_subjects);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-        errorView = (TextView) rootView.findViewById(R.id.error);
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
+            calendarContainer = (LinearLayout) rootView.findViewById(R.id.calendar_subjects);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+            errorView = (TextView) rootView.findViewById(R.id.error);
+        }
         return rootView;
     }
 
