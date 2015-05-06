@@ -1,5 +1,6 @@
 package frezc.bangumitimemachine.app.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -79,8 +80,18 @@ public class MainActivity extends ActionBarActivity
         app = (MyApplication) getApplication();
         initView();
         initSections();
-        initFragment(savedInstanceState==null);
+        initFragment(savedInstanceState == null);
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Toast.makeText(this,"横屏",Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "竖屏", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initFragment(Boolean isInit) {
@@ -215,8 +226,6 @@ public class MainActivity extends ActionBarActivity
                 }
                 break;
         }
-
-        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override

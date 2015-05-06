@@ -130,6 +130,7 @@ public class SubjectsCardView extends CardView implements View.OnTouchListener{
                     textView.setOnTouchListener(this);
                     textView.setId(i);
                     textView.setGravity(Gravity.CENTER_VERTICAL);
+                    textView.setPadding((int) (8*UIParams.density),0,0,0);
                     subjectContainer.addView(textView, params);
                 }
             }
