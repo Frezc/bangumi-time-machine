@@ -323,7 +323,9 @@ subject 番组详情详情
     
 设置收藏信息
 ---
-	[POST] /collection/{subjectID}/create?source=BGMbyYumeProject&auth={auth_encode}
+	[POST] /collection/{subjectID}/create[|update]?source=BGMbyYumeProject&auth={auth_encode}
+    这里create也能改为update，似乎没什么区别
+    
     [body]
     | name | value |
     |------|-------|

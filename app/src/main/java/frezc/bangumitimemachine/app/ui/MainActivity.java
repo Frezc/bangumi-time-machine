@@ -147,6 +147,12 @@ public class MainActivity extends ActionBarActivity
         searcherSection.setColorSelectedSection(0xffF09199);
         searcherSection.setOnSelectListener(this);
 
+        Section notificationSection = new Section(this, Section.TYPE_SECTION_ICON,
+                "消息", R.mipmap.ic_announcement_grey600_24dp, 0);
+        notificationSection.setNotification(10);
+        searcherSection.setColorSelectedSection(0xffF09199);
+        notificationSection.setOnSelectListener(this);
+
         Section animeSection = new Section(this, Section.TYPE_SECTION, "我的动画", UIParams.PAGE_ANIME);
         animeSection.setColorSelectedSection(0xffF09199);
         animeSection.setOnSelectListener(this);
@@ -155,9 +161,11 @@ public class MainActivity extends ActionBarActivity
         //...
         sectionList.add(homeSection);
         sectionList.add(searcherSection);
+        sectionList.add(notificationSection);
         sectionList.add(animeSection);
 
         //add sections
+        addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_SECTION, null);
         addToDrawer(Section.TYPE_DIVISOR, null);
@@ -240,6 +248,7 @@ public class MainActivity extends ActionBarActivity
         switch (section.getTag()){
             case UIParams.PAGE_ANIME:
                 Toast.makeText(this,"我的动画", Toast.LENGTH_SHORT).show();
+
                 break;
 
             case UIParams.PAGE_BOOK:
