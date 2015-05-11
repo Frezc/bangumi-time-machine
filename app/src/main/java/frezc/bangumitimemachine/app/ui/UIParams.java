@@ -8,7 +8,7 @@ public class UIParams {
 
     public static final int PAGE_HOME = -1;
     public static final int PAGE_SEARCHER = 0;
-    public static final int PAGE_ANIME = 1;
+    public static final int PAGE_WATCHLIST = 1;
     public static final int PAGE_BOOK = 2;
     public static final int PAGE_MUSIC = 3;
     public static final int PAGE_GAME = 4;

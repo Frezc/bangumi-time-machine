@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import frezc.bangumitimemachine.app.network.http.GsonRequest;
 import frezc.bangumitimemachine.app.network.http.NetParams;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.UIParams;
+import frezc.bangumitimemachine.app.ui.callback.OnRefreshCompleteListener;
+import frezc.bangumitimemachine.app.ui.callback.OnRefreshListener;
 import frezc.bangumitimemachine.app.ui.customview.SubjectsCardView;
 
 import java.util.HashMap;
@@ -30,10 +33,11 @@ import java.util.Map;
 
 /**
  * Created by freeze on 2015/5/2.
+ * 实现了请求回调接口, 项目选择接口, 刷新接口
  */
 public class CalendarFragment extends Fragment
         implements GsonRequest.OnListResponseListener<WeekSubjects>,Response.ErrorListener,
-        SubjectsCardView.OnItemSelectListener{
+        SubjectsCardView.OnItemSelectListener,OnRefreshListener {
 
     private List<WeekSubjects> weekSubjectsList;
     private LinearLayout calendarContainer;
@@ -44,6 +48,8 @@ public class CalendarFragment extends Fragment
     private NetWorkTool netWorkTool;
     //请求头
     private GsonRequest<WeekSubjects> request;
+
+    private OnRefreshCompleteListener onRefreshCompleteListener;
 
     public static CalendarFragment newInstance(Context context){
         CalendarFragment calendarFragment = new CalendarFragment();
@@ -84,6 +90,10 @@ public class CalendarFragment extends Fragment
         this.netWorkTool = netWorkTool;
     }
 
+    public void setOnRefreshCompleteListener(OnRefreshCompleteListener onRefreshCompleteListener) {
+        this.onRefreshCompleteListener = onRefreshCompleteListener;
+    }
+
     /**
      * 刷新fragment
      */
@@ -93,11 +103,31 @@ public class CalendarFragment extends Fragment
         }
     }
 
+    private void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+        calendarContainer.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+    }
+
+    private void showCalendar(){
+        progressBar.setVisibility(View.GONE);
+        calendarContainer.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.GONE);
+    }
+
+    private void showError(){
+        progressBar.setVisibility(View.GONE);
+        calendarContainer.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onErrorResponse(VolleyError error) {
-        progressBar.setVisibility(View.GONE);
-        errorView.setVisibility(View.VISIBLE);
+        showError();
         Toast.makeText(getActivity(),error.toString(),Toast.LENGTH_SHORT).show();
+        if(onRefreshCompleteListener != null){
+            onRefreshCompleteListener.onRefreshComplete();
+        }
     }
 
     @Override
@@ -108,8 +138,9 @@ public class CalendarFragment extends Fragment
     @Override
     public void onResponse(List<WeekSubjects> response) {
         weekSubjectsList = response;
-        progressBar.setVisibility(View.GONE);
-        calendarContainer.setVisibility(View.VISIBLE);
+        showCalendar();
+        //清空container
+        calendarContainer.removeAllViews();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins((int) (8 * UIParams.density), (int) (8 * UIParams.density),
@@ -120,5 +151,14 @@ public class CalendarFragment extends Fragment
             subjectsCardView.setOnItemSelectListener(this);
             calendarContainer.addView(subjectsCardView,params);
         }
+        if(onRefreshCompleteListener != null){
+            onRefreshCompleteListener.onRefreshComplete();
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        showLoading();
+        refresh();
     }
 }

@@ -15,6 +15,15 @@ public class Subject {
     private String name_cn;
     private int type;
     private String url;
+    private int eps;
+
+    public int getEps() {
+        return eps;
+    }
+
+    public void setEps(int eps) {
+        this.eps = eps;
+    }
 
     public static class Collection{
         public int wish;

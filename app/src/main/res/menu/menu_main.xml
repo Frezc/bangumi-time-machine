@@ -7,9 +7,16 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
+      <item android:id="@+id/action_refresh"
+            android:title="刷新"
+            android:orderInCategory="100"
+            android:icon="@mipmap/ic_autorenew_grey600_36dp"
+            app:showAsAction="ifRoom" />
+
       <item android:id="@+id/action_edit"
             android:title="编辑"
             android:orderInCategory="80"
             android:icon="@drawable/abc_edit_text_material"
             app:showAsAction="ifRoom"/>
+
 </menu>

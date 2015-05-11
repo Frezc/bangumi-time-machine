@@ -379,3 +379,16 @@ subject 番组详情详情
 		code: HTTP返回代码，200为成功
 		error: 错误的描述，没错误的话是 "OK"
 	}
+    
+---
+另一种
+	[POST] http://netaba.re/api/subject/59825/watchedto/{集数}
+    相当于网页上的设置进度
+    Authorization: Basic {BASE64 username:password}
+    
+    [return] 同上 
+    {
+    	request: 
+        code: 202 成功
+        error: 成功返回"Accepted"
+    }

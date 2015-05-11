@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
+import frezc.bangumitimemachine.app.ui.callback.OnRefreshCompleteListener;
+import frezc.bangumitimemachine.app.ui.callback.OnRefreshListener;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
 import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
@@ -31,7 +34,7 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-    implements View.OnClickListener, Section.OnSelectListener{
+    implements View.OnClickListener, Section.OnSelectListener, Toolbar.OnMenuItemClickListener {
     private Toolbar toolbar;
     //头像
     private ImageView photo;
@@ -49,28 +52,6 @@ public class MainActivity extends ActionBarActivity
     private FragmentManager fragmentManager;
     private CalendarFragment calendarFragment;
 
-    /**
-     * toolbar的菜单点击事件
-     */
-    private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            String msg = null;
-            switch (menuItem.getItemId()) {
-                case R.id.action_edit:
-                    msg = "Click edit";
-                    break;
-                case R.id.action_settings:
-                    msg = "Click setting";
-                    break;
-            }
-
-            if(msg != null && !msg.equals("")) {
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +69,7 @@ public class MainActivity extends ActionBarActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            Toast.makeText(this,"横屏",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "横屏", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(this, "竖屏", Toast.LENGTH_SHORT).show();
         }
@@ -120,7 +101,7 @@ public class MainActivity extends ActionBarActivity
         setSupportActionBar(toolbar);
         //setNavigationIcon需要放在 setSupportActionBar之后才会生效
         toolbar.setNavigationIcon(R.drawable.abc_ic_menu_share_mtrl_alpha);
-        toolbar.setOnMenuItemClickListener(onMenuItemClick);
+        toolbar.setOnMenuItemClickListener(this);
 
         photo = (ImageView) findViewById(R.id.user_photo);
         photo.setOnClickListener(this);
@@ -129,6 +110,7 @@ public class MainActivity extends ActionBarActivity
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
 
         mainContainer = (FrameLayout) findViewById(R.id.main_container);
+
     }
 
     /**
@@ -153,7 +135,7 @@ public class MainActivity extends ActionBarActivity
         searcherSection.setColorSelectedSection(0xffF09199);
         notificationSection.setOnSelectListener(this);
 
-        Section animeSection = new Section(this, Section.TYPE_SECTION, "我的动画", UIParams.PAGE_ANIME);
+        Section animeSection = new Section(this, Section.TYPE_SECTION, "补番列表", UIParams.PAGE_WATCHLIST);
         animeSection.setColorSelectedSection(0xffF09199);
         animeSection.setOnSelectListener(this);
 
@@ -246,7 +228,7 @@ public class MainActivity extends ActionBarActivity
         section.select();
 
         switch (section.getTag()){
-            case UIParams.PAGE_ANIME:
+            case UIParams.PAGE_WATCHLIST:
                 Toast.makeText(this,"我的动画", Toast.LENGTH_SHORT).show();
 
                 break;
@@ -292,5 +274,30 @@ public class MainActivity extends ActionBarActivity
             }
             transaction.commit();
         }
+    }
+
+    /**
+     * toolbar的菜单点击事件
+     */
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        String msg = null;
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                msg = "Click edit";
+                break;
+            case R.id.action_settings:
+                msg = "Click setting";
+                break;
+            case R.id.action_refresh:
+                ((OnRefreshListener)contentFragment).onRefresh();
+                msg = "refresh!";
+                break;
+        }
+
+        if(msg != null && !msg.equals("")) {
+            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

@@ -10,4 +10,6 @@
     <!-- Section Dimens-->
     <dimen name="section_height">48dp</dimen>
     <dimen name="section_image_width">24dp</dimen>
+    <!-- List Dimens -->
+    <dimen name="list_height">80dp</dimen>
 </resources>
