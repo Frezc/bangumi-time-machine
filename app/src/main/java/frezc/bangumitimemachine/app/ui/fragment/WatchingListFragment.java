@@ -110,8 +110,10 @@ public class WatchingListFragment extends NetFragment implements
     @Override
     public void refresh(){
         if(MyApplication.isUserLogin() && isAdded()) {
+            String url = NetParams.getWatchingUrl(MyApplication.getLoginUser().getId());
+            netWorkTool.clearCache();
             GsonRequest<WatchingSubject> request = new GsonRequest<WatchingSubject>(getActivity(),
-                    Request.Method.GET, NetParams.getWatchingUrl(MyApplication.getLoginUser().getId()),
+                    Request.Method.GET, url,
                     WatchingSubject.class, headers, this,this);
             request.setTag(this);
             netWorkTool.addToRequestQueue(request);

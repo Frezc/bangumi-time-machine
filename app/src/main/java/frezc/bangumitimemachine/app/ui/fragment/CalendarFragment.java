@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ClearCacheRequest;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.DetailSubject;
 import frezc.bangumitimemachine.app.entity.Subject;
@@ -93,6 +94,7 @@ public class CalendarFragment extends NetFragment
     @Override
     public void refresh(){
         if(isAdded()) {
+            netWorkTool.clearCache();
             GsonRequest<WeekSubjects> request = new GsonRequest<WeekSubjects>(getActivity(),Request.Method.GET,
                     NetParams.CALENDAR_URL, WeekSubjects.class,headers,this,this);
             request.setTag(this);
@@ -131,6 +133,9 @@ public class CalendarFragment extends NetFragment
 
     @Override
     public void onResponse(List<WeekSubjects> response) {
+        if(weekSubjectsList != null){
+            weekSubjectsList.clear();
+        }
         weekSubjectsList = response;
         showCalendar();
         //清空container
