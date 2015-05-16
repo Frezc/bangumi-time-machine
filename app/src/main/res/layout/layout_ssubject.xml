@@ -25,9 +25,9 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
             android:layout_toRightOf="@id/subject_play"
-              android:layout_alignTop="@id/subject_img"
               android:layout_marginLeft="8dp"
               android:textSize="16dp"
+              android:maxLength="10"
             android:text="新世界より"/>
     <TextView
             android:id="@+id/subject_progress_title"

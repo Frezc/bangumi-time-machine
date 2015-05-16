@@ -16,4 +16,5 @@ public class UIParams {
 
     //fragment tag
     public static final String FRAGMENT_CALENDAR = "calendar";
+    public static final String FRAGMENT_WATCHING = "watching";
 }

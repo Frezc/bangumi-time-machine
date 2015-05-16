@@ -9,17 +9,19 @@ import frezc.bangumitimemachine.app.ui.UIParams;
  * Created by freeze on 2015/4/23.
  */
 public class MyApplication extends Application {
-    private LoginUser loginUser = null;
+    //保存登陆账号的信息，app中只允许登陆一个账号
+    //static方便获取与修改账号
+    private static LoginUser loginUser = null;
 
-    public void setLoginUser(LoginUser loginUser) {
-        this.loginUser = loginUser;
+    public static void setLoginUser(LoginUser loginUser) {
+        MyApplication.loginUser = loginUser;
     }
 
-    public LoginUser getLoginUser() {
+    public static LoginUser getLoginUser() {
         return loginUser;
     }
 
-    public boolean isUserLogin(){
+    public static boolean isUserLogin(){
         return loginUser != null;
     }
 

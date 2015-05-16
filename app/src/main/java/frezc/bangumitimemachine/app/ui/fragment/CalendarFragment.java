@@ -35,9 +35,9 @@ import java.util.Map;
  * Created by freeze on 2015/5/2.
  * 实现了请求回调接口, 项目选择接口, 刷新接口
  */
-public class CalendarFragment extends Fragment
-        implements GsonRequest.OnListResponseListener<WeekSubjects>,Response.ErrorListener,
-        SubjectsCardView.OnItemSelectListener,OnRefreshListener {
+public class CalendarFragment extends NetFragment
+        implements GsonRequest.OnListResponseListener<WeekSubjects>,
+        SubjectsCardView.OnItemSelectListener {
 
     private List<WeekSubjects> weekSubjectsList;
     private LinearLayout calendarContainer;
@@ -45,15 +45,13 @@ public class CalendarFragment extends Fragment
     private TextView errorView;
     private View rootView;
 
-    private NetWorkTool netWorkTool;
     //请求头
     private GsonRequest<WeekSubjects> request;
-
-    private OnRefreshCompleteListener onRefreshCompleteListener;
 
     public static CalendarFragment newInstance(Context context){
         CalendarFragment calendarFragment = new CalendarFragment();
         calendarFragment.setNetWorkTool(NetWorkTool.getInstance(context));
+        calendarFragment.setResetFlag(true);
         return calendarFragment;
     }
 
@@ -62,9 +60,9 @@ public class CalendarFragment extends Fragment
         super.onAttach(activity);
         Map<String,String> headers = new HashMap<String, String>();
         headers.put("Accept-Encoding","gzip");
-        headers.put("User-Agent", "android-async-http/1.4.1 (http://loopj.com/android-async-http)");
         request = new GsonRequest<WeekSubjects>(activity,Request.Method.GET,
                 NetParams.CALENDAR_URL, WeekSubjects.class,headers,this,this);
+        request.setTag(this);
     }
 
     @Override
@@ -81,22 +79,17 @@ public class CalendarFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        if(weekSubjectsList == null){
+        if(isReset){
+            showLoading();
             refresh();
+            isReset = false;
         }
-    }
-
-    public void setNetWorkTool(NetWorkTool netWorkTool) {
-        this.netWorkTool = netWorkTool;
-    }
-
-    public void setOnRefreshCompleteListener(OnRefreshCompleteListener onRefreshCompleteListener) {
-        this.onRefreshCompleteListener = onRefreshCompleteListener;
     }
 
     /**
      * 刷新fragment
      */
+    @Override
     public void refresh(){
         if(isAdded()) {
             netWorkTool.addToRequestQueue(request);
@@ -125,9 +118,6 @@ public class CalendarFragment extends Fragment
     public void onErrorResponse(VolleyError error) {
         showError();
         Toast.makeText(getActivity(),error.toString(),Toast.LENGTH_SHORT).show();
-        if(onRefreshCompleteListener != null){
-            onRefreshCompleteListener.onRefreshComplete();
-        }
     }
 
     @Override
@@ -150,9 +140,6 @@ public class CalendarFragment extends Fragment
             subjectsCardView.setWeekSubjects(response.get(i));
             subjectsCardView.setOnItemSelectListener(this);
             calendarContainer.addView(subjectsCardView,params);
-        }
-        if(onRefreshCompleteListener != null){
-            onRefreshCompleteListener.onRefreshComplete();
         }
     }
 

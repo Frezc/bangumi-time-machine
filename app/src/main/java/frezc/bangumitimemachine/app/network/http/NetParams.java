@@ -29,7 +29,7 @@ public class NetParams {
     public static final String STATUS_URL_DONE = "watched";
     public static final String STATUS_URL_DROP = "drop";
 
-    public static String getWatchingUrl(String uid){
+    public static String getWatchingUrl(int uid){
         return USER_URL + "/" + uid + "/collection?cat=watching";
     }
 

@@ -15,12 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.*;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
+import frezc.bangumitimemachine.app.entity.LoginUser;
+import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.callback.OnRefreshCompleteListener;
 import frezc.bangumitimemachine.app.ui.callback.OnRefreshListener;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
@@ -28,19 +29,26 @@ import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
 import frezc.bangumitimemachine.app.ui.dialog.LoginDialog;
 import frezc.bangumitimemachine.app.ui.drawer.Section;
 import frezc.bangumitimemachine.app.ui.fragment.CalendarFragment;
+import frezc.bangumitimemachine.app.ui.fragment.NetFragment;
+import frezc.bangumitimemachine.app.ui.fragment.WatchingListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-    implements View.OnClickListener, Section.OnSelectListener, Toolbar.OnMenuItemClickListener {
+    implements View.OnClickListener, Section.OnSelectListener, Toolbar.OnMenuItemClickListener,
+        LoginDialog.OnLoginSuccessListener{
     private Toolbar toolbar;
     //头像
     private ImageView photo;
+    private TextView username;
+    private TextView sign;
+    //头像图片请求
+    private ImageLoader.ImageContainer photoRequest;
     //侧边栏列表
     private LinearLayout sectionContainter;
-    private MyApplication app;
+//    private MyApplication app;
     private DrawerLayout drawerLayout;
     private FrameLayout mainContainer;
 
@@ -48,17 +56,17 @@ public class MainActivity extends ActionBarActivity
     private Section selectSection = null;
     private int sectionOrder;
 
-    private Fragment contentFragment;
+    private NetFragment contentFragment;
     private FragmentManager fragmentManager;
     private CalendarFragment calendarFragment;
-
+    private WatchingListFragment watchingListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        app = (MyApplication) getApplication();
+//        app = (MyApplication) getApplication();
         initView();
         initSections();
         initFragment(savedInstanceState == null);
@@ -79,6 +87,7 @@ public class MainActivity extends ActionBarActivity
         fragmentManager = getSupportFragmentManager();
         if(isInit) {
             calendarFragment = CalendarFragment.newInstance(this);
+            watchingListFragment = WatchingListFragment.newInstance(this);
             contentFragment = calendarFragment;
             fragmentManager.beginTransaction()
                     .add(R.id.main_container, contentFragment, UIParams.FRAGMENT_CALENDAR)
@@ -105,6 +114,9 @@ public class MainActivity extends ActionBarActivity
 
         photo = (ImageView) findViewById(R.id.user_photo);
         photo.setOnClickListener(this);
+
+        username = (TextView) findViewById(R.id.user_name);
+        sign = (TextView) findViewById(R.id.user_sign);
 
         sectionContainter = (LinearLayout) findViewById(R.id.section_container);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
@@ -208,10 +220,11 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_photo:
-                if(app.isUserLogin()) {
+                if(MyApplication.isUserLogin()) {
 
                 }else {
                     LoginDialog ld = new LoginDialog();
+                    ld.setOnLoginSuccessListener(this);
                     ld.show(getSupportFragmentManager(), "dialog_login");
                 }
                 break;
@@ -229,8 +242,8 @@ public class MainActivity extends ActionBarActivity
 
         switch (section.getTag()){
             case UIParams.PAGE_WATCHLIST:
-                Toast.makeText(this,"我的动画", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this,"补番列表", Toast.LENGTH_SHORT).show();
+                switchContent(contentFragment, watchingListFragment);
                 break;
 
             case UIParams.PAGE_BOOK:
@@ -263,7 +276,7 @@ public class MainActivity extends ActionBarActivity
 
     public void switchContent(Fragment from, Fragment to){
         if(contentFragment != to){
-            contentFragment = to;
+            contentFragment = (NetFragment) to;
             //添加动画
             FragmentTransaction transaction = fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.slide_out_right);
@@ -290,7 +303,7 @@ public class MainActivity extends ActionBarActivity
                 msg = "Click setting";
                 break;
             case R.id.action_refresh:
-                ((OnRefreshListener)contentFragment).onRefresh();
+                contentFragment.onRefresh();
                 msg = "refresh!";
                 break;
         }
@@ -299,5 +312,29 @@ public class MainActivity extends ActionBarActivity
             Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    @Override
+    public void onLogin(LoginUser user) {
+        username.setText(user.getNickname());
+        if(user.getSign().isEmpty()){
+            sign.setText("什么都没留下");
+        }else {
+            sign.setText(user.getSign());
+        }
+        photoRequest =  NetWorkTool.getInstance(this).loadImage(user.getAvatar().small,
+                ImageLoader.getImageListener(photo,R.mipmap.ico_ios,R.mipmap.icon));
+        //重置fragment
+        if(watchingListFragment != null){
+            watchingListFragment.setResetFlag(true);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(photoRequest != null){
+            photoRequest.cancelRequest();
+        }
     }
 }

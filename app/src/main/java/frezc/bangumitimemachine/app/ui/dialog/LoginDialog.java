@@ -12,6 +12,7 @@ import android.widget.*;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonSyntaxException;
+import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.LoginUser;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
@@ -33,6 +34,12 @@ public class LoginDialog extends DialogFragment
 
     private String username;
     private String password;
+
+    private OnLoginSuccessListener onLoginSuccessListener;
+
+    public void setOnLoginSuccessListener(OnLoginSuccessListener onLoginSuccessListener) {
+        this.onLoginSuccessListener = onLoginSuccessListener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +114,10 @@ public class LoginDialog extends DialogFragment
             setError("用户名或密码错误");
         }else {
             Toast.makeText(getActivity(), "登录成功 " + loginUser.getNickname(), Toast.LENGTH_SHORT).show();
+            MyApplication.setLoginUser(loginUser);
+            if(onLoginSuccessListener != null){
+                onLoginSuccessListener.onLogin(loginUser);
+            }
             dismiss();
         }
     }
@@ -131,5 +142,9 @@ public class LoginDialog extends DialogFragment
             basicAuth.cancel();
         }
         super.onDismiss(dialog);
+    }
+
+    public interface OnLoginSuccessListener{
+        void onLogin(LoginUser user);
     }
 }

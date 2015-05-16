@@ -65,8 +65,8 @@ public class NetWorkTool {
         getRequestQueue().add(req);
     }
 
-    public void loadImage(String url, ImageLoader.ImageListener listener){
-        mImageLoader.get(url,listener);
+    public ImageLoader.ImageContainer loadImage(String url, ImageLoader.ImageListener listener){
+        return mImageLoader.get(url,listener);
     }
 
     public void cancelAll(Object tag){
