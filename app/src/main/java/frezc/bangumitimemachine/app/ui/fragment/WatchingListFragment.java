@@ -113,6 +113,7 @@ public class WatchingListFragment extends NetFragment implements
             GsonRequest<WatchingSubject> request = new GsonRequest<WatchingSubject>(getActivity(),
                     Request.Method.GET, NetParams.getWatchingUrl(MyApplication.getLoginUser().getId()),
                     WatchingSubject.class, headers, this,this);
+            request.setTag(this);
             netWorkTool.addToRequestQueue(request);
         }else {
             showError();

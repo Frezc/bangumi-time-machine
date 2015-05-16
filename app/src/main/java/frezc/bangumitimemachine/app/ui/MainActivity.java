@@ -243,7 +243,8 @@ public class MainActivity extends ActionBarActivity
         switch (section.getTag()){
             case UIParams.PAGE_WATCHLIST:
                 Toast.makeText(this,"补番列表", Toast.LENGTH_SHORT).show();
-                switchContent(contentFragment, watchingListFragment);
+                switchContent(contentFragment, watchingListFragment, UIParams.FRAGMENT_WATCHING);
+                contentFragment = watchingListFragment;
                 break;
 
             case UIParams.PAGE_BOOK:
@@ -267,14 +268,20 @@ public class MainActivity extends ActionBarActivity
                 break;
 
             case UIParams.PAGE_HOME:
-
+                switchContent(contentFragment, calendarFragment, UIParams.FRAGMENT_CALENDAR);
+                contentFragment = calendarFragment;
                 break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    public void switchContent(Fragment from, Fragment to){
+    /**
+     * 切换fragment 不过不太好设置tag
+     * @param from
+     * @param to
+     */
+    public void switchContent(Fragment from, Fragment to, String tag){
         if(contentFragment != to){
             contentFragment = (NetFragment) to;
             //添加动画
@@ -283,7 +290,7 @@ public class MainActivity extends ActionBarActivity
             if(to.isAdded()){
                 transaction.hide(from).show(to);
             }else {
-                transaction.hide(from).add(R.id.main_container, to);
+                transaction.hide(from).add(R.id.main_container, to, tag);
             }
             transaction.commit();
         }

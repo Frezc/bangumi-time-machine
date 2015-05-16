@@ -1,5 +1,6 @@
 package frezc.bangumitimemachine.app.ui.fragment;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.android.volley.Response;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
@@ -30,5 +31,12 @@ public abstract class NetFragment extends Fragment implements OnRefreshListener,
 
     public void setResetFlag(boolean flag){
         isReset = flag;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //保持framgent
+        setRetainInstance(true);
     }
 }

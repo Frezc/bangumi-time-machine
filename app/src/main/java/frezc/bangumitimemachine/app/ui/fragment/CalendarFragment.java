@@ -45,8 +45,6 @@ public class CalendarFragment extends NetFragment
     private TextView errorView;
     private View rootView;
 
-    //请求头
-    private GsonRequest<WeekSubjects> request;
 
     public static CalendarFragment newInstance(Context context){
         CalendarFragment calendarFragment = new CalendarFragment();
@@ -56,13 +54,16 @@ public class CalendarFragment extends NetFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        headers = new HashMap<String, String>();
+        headers.put("Accept-Encoding","gzip");
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Map<String,String> headers = new HashMap<String, String>();
-        headers.put("Accept-Encoding","gzip");
-        request = new GsonRequest<WeekSubjects>(activity,Request.Method.GET,
-                NetParams.CALENDAR_URL, WeekSubjects.class,headers,this,this);
-        request.setTag(this);
+
     }
 
     @Override
@@ -92,6 +93,9 @@ public class CalendarFragment extends NetFragment
     @Override
     public void refresh(){
         if(isAdded()) {
+            GsonRequest<WeekSubjects> request = new GsonRequest<WeekSubjects>(getActivity(),Request.Method.GET,
+                    NetParams.CALENDAR_URL, WeekSubjects.class,headers,this,this);
+            request.setTag(this);
             netWorkTool.addToRequestQueue(request);
         }
     }
