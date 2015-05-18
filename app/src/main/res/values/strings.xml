@@ -6,4 +6,6 @@
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="cannot_find_pic">图片丢失</string>
+
+    <string name="default_sign">什么都没留下</string>
 </resources>

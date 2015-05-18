@@ -18,7 +18,10 @@ import android.widget.*;
 import com.android.volley.toolbox.ImageLoader;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
+import frezc.bangumitimemachine.app.db.DB;
+import frezc.bangumitimemachine.app.entity.BaseAuth;
 import frezc.bangumitimemachine.app.entity.LoginUser;
+import frezc.bangumitimemachine.app.network.http.BasicAuth;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
@@ -52,6 +55,7 @@ public class MainActivity extends ActionBarActivity
     private Section selectSection = null;
     private int sectionOrder;
 
+    public static final String NOWFRAGMENT = "nowFragment";
     private NetFragment contentFragment;
     private FragmentManager fragmentManager;
     private CalendarFragment calendarFragment;
@@ -63,10 +67,26 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
 //        app = (MyApplication) getApplication();
+
         initView();
         initSections();
-        initFragment(savedInstanceState == null);
+        initFragment(savedInstanceState);
+        autoLogin();
+    }
 
+    private void autoLogin() {
+        BaseAuth auth = new DB(this).getAuth();
+        if(auth != null){
+            LoginDialog ld = LoginDialog.newInstance(auth);
+            ld.setOnLoginSuccessListener(this);
+            ld.show(getSupportFragmentManager(), "dialog_login");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(NOWFRAGMENT, contentFragment.getTag());
     }
 
     @Override
@@ -79,9 +99,9 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private void initFragment(Boolean isInit) {
+    private void initFragment(Bundle save) {
         fragmentManager = getSupportFragmentManager();
-        if(isInit) {
+        if(save == null) {
             calendarFragment = CalendarFragment.newInstance(this);
             watchingListFragment = WatchingListFragment.newInstance(this);
             contentFragment = calendarFragment;
@@ -89,8 +109,10 @@ public class MainActivity extends ActionBarActivity
                     .add(R.id.main_container, contentFragment, UIParams.FRAGMENT_CALENDAR)
                     .commit();
         }else {
-//            contentFragment = fragmentManager.findFragmentById(R.id.main_container);
+
             calendarFragment = (CalendarFragment) fragmentManager.findFragmentByTag(UIParams.FRAGMENT_CALENDAR);
+            watchingListFragment = (WatchingListFragment) fragmentManager.findFragmentByTag(UIParams.FRAGMENT_WATCHING);
+            contentFragment = (NetFragment) fragmentManager.findFragmentByTag(save.getString(NOWFRAGMENT));
 
             fragmentManager.beginTransaction()
                     .show(calendarFragment)
@@ -219,7 +241,7 @@ public class MainActivity extends ActionBarActivity
                 if(MyApplication.isUserLogin()) {
 
                 }else {
-                    LoginDialog ld = new LoginDialog();
+                    LoginDialog ld = LoginDialog.newInstance(null);
                     ld.setOnLoginSuccessListener(this);
                     ld.show(getSupportFragmentManager(), "dialog_login");
                 }
@@ -321,7 +343,7 @@ public class MainActivity extends ActionBarActivity
     public void onLogin(LoginUser user) {
         username.setText(user.getNickname());
         if(user.getSign().isEmpty()){
-            sign.setText("什么都没留下");
+            sign.setText(R.string.default_sign);
         }else {
             sign.setText(user.getSign());
         }

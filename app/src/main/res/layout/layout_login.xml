@@ -26,7 +26,7 @@
             android:layout_alignTop="@id/login_title"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:textSize="20sp"/>
+            android:textSize="14sp"/>
 
     <EditText
             android:id="@+id/login_email"
@@ -54,12 +54,30 @@
             android:password="true"
         />
 
+    <CheckBox android:id="@+id/login_auto"
+              android:layout_below="@id/login_password"
+              android:layout_marginTop="8dp"
+              android:checked="false"
+              android:layout_alignLeft="@+id/login_comfirm"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            />
+
+    <TextView
+            android:layout_toRightOf="@id/login_auto"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="自动登录"
+            android:layout_below="@id/login_password"
+            android:textSize="16sp"
+            android:textColor="#ffc7cdc7"
+            android:layout_marginTop="12dp"
+            />
+
     <Button android:id="@+id/login_comfirm"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_below="@id/login_password"
+            android:layout_below="@id/login_auto"
             android:text="确定"
             style="@style/PinkButton"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:visibility="visible"/>

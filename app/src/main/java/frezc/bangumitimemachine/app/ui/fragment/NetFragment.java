@@ -39,4 +39,5 @@ public abstract class NetFragment extends Fragment implements OnRefreshListener,
         //保持framgent
         setRetainInstance(true);
     }
+
 }

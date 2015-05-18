@@ -12,6 +12,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
+import frezc.bangumitimemachine.app.db.DB;
+import frezc.bangumitimemachine.app.entity.BaseAuth;
 import frezc.bangumitimemachine.app.entity.LoginUser;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
@@ -26,6 +28,7 @@ public class LoginDialog extends DialogFragment
     private TextView tvLoginFail;
     private Button loginButton;
     private ProgressBar loginProgress;
+    private CheckBox autoLogin;
 
     private NetWorkTool netWorkTool;
     private BasicAuth basicAuth;
@@ -37,6 +40,17 @@ public class LoginDialog extends DialogFragment
 
     public void setOnLoginSuccessListener(OnLoginSuccessListener onLoginSuccessListener) {
         this.onLoginSuccessListener = onLoginSuccessListener;
+    }
+
+    public static LoginDialog newInstance(BaseAuth auth){
+        LoginDialog loginDialog = new LoginDialog();
+        if(auth != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("username", auth.getUsername());
+            bundle.putString("password", auth.getPassword());
+            loginDialog.setArguments(bundle);
+        }
+        return loginDialog;
     }
 
     @Override
@@ -63,7 +77,15 @@ public class LoginDialog extends DialogFragment
         loginButton = (Button) v.findViewById(R.id.login_comfirm);
         loginButton.setOnClickListener(this);
         loginProgress = (ProgressBar) v.findViewById(R.id.login_wait);
-
+        autoLogin = (CheckBox) v.findViewById(R.id.login_auto);
+        
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            etEmail.setText(bundle.getString("username"));
+            etPassword.setText(bundle.getString("password"));
+            autoLogin.setChecked(true);
+            loginButton.performClick();
+        }
     }
 
     @Override
@@ -109,10 +131,18 @@ public class LoginDialog extends DialogFragment
     @Override
     public void onResponse(LoginUser loginUser) {
         if(loginUser.getAuth() == null) {
-            setError("用户名或密码错误");
+            setError("用户名和密码不能为空");
         }else {
             Toast.makeText(getActivity(), "登录成功 " + loginUser.getNickname(), Toast.LENGTH_SHORT).show();
             MyApplication.setLoginUser(loginUser);
+            if(autoLogin.isChecked()){
+                BaseAuth auth = new BaseAuth();
+                auth.setUsername(username);
+                auth.setPassword(password);
+                new DB(getActivity()).saveAuth(auth);
+            }else {
+                new DB(getActivity()).deleteAuth();
+            }
             if(onLoginSuccessListener != null){
                 onLoginSuccessListener.onLogin(loginUser);
             }

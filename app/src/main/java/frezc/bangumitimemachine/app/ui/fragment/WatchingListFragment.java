@@ -39,6 +39,7 @@ public class WatchingListFragment extends NetFragment implements
     private RecyclerView watchingList;
     private ProgressBar progressBar;
     private LinearLayout errorView;
+    private View rootView;
 
     private WatchingListAdapter watchingListAdapter;
 
@@ -59,23 +60,25 @@ public class WatchingListFragment extends NetFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_watching, container, false);
-        watchingList = (RecyclerView) rootView.findViewById(R.id.watching_list);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.watching_progress);
-        errorView = (LinearLayout) rootView.findViewById(R.id.watching_error);
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_watching, container, false);
+            watchingList = (RecyclerView) rootView.findViewById(R.id.watching_list);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.watching_progress);
+            errorView = (LinearLayout) rootView.findViewById(R.id.watching_error);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        watchingList.setLayoutManager(linearLayoutManager);
-        watchingList.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.ItemDecoration decoration = new ListDecoration(getActivity());
-        watchingList.addItemDecoration(decoration);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            watchingList.setLayoutManager(linearLayoutManager);
+            watchingList.setItemAnimator(new DefaultItemAnimator());
+            RecyclerView.ItemDecoration decoration = new ListDecoration(getActivity());
+            watchingList.addItemDecoration(decoration);
 
-        watchingListAdapter = new WatchingListAdapter();
-        watchingListAdapter.setOnItemClickListener(this);
-        watchingListAdapter.setOnItemLongClickListener(this);
+            watchingListAdapter = new WatchingListAdapter();
+            watchingListAdapter.setOnItemClickListener(this);
+            watchingListAdapter.setOnItemLongClickListener(this);
 
-        watchingList.setAdapter(watchingListAdapter);
+            watchingList.setAdapter(watchingListAdapter);
+        }
         return rootView;
     }
 
