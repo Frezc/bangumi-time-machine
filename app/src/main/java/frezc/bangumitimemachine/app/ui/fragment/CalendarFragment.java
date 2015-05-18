@@ -3,8 +3,6 @@ package frezc.bangumitimemachine.app.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +11,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ClearCacheRequest;
 import frezc.bangumitimemachine.app.R;
-import frezc.bangumitimemachine.app.entity.DetailSubject;
 import frezc.bangumitimemachine.app.entity.Subject;
 import frezc.bangumitimemachine.app.entity.WeekSubjects;
 import frezc.bangumitimemachine.app.network.http.GsonRequest;
 import frezc.bangumitimemachine.app.network.http.NetParams;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.UIParams;
-import frezc.bangumitimemachine.app.ui.callback.OnRefreshCompleteListener;
-import frezc.bangumitimemachine.app.ui.callback.OnRefreshListener;
 import frezc.bangumitimemachine.app.ui.customview.SubjectsCardView;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by freeze on 2015/5/2.

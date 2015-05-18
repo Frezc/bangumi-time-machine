@@ -13,8 +13,6 @@ import android.view.SurfaceView;
 
 /**
  * Created by freeze on 2015/4/26.
- * 横竖屏切换时会出现canvas的空指针错误
- * 目前看来只能强制结束绘制线程来解决？
  */
 public class GifView extends SurfaceView
     implements SurfaceHolder.Callback{
@@ -91,6 +89,7 @@ public class GifView extends SurfaceView
     }
 
     private void drawMovieFrame(Canvas canvas) {
+        if(canvas == null) return;
         long now = SystemClock.uptimeMillis();
         if(movieStartTime == -1){
             movieStartTime = now;
@@ -112,7 +111,7 @@ public class GifView extends SurfaceView
         boolean running;
         @Override
         public void run() {
-            while (running){
+            while (running && holder != null){
                 canvas = holder.lockCanvas();
                 drawMovieFrame(canvas);
                 holder.unlockCanvasAndPost(canvas);

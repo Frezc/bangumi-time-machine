@@ -1,7 +1,6 @@
 package frezc.bangumitimemachine.app.ui.dialog;
 
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.*;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.JsonSyntaxException;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.LoginUser;
