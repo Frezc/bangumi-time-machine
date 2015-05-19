@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 /**
  * Created by freeze on 2015/5/18.
  */
-public class ConllectionFragment extends DialogFragment {
+public class ConllectionDialog extends DialogFragment {
 
 
 

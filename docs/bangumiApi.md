@@ -384,11 +384,32 @@ subject 番组详情详情
 另一种
 	[POST] http://netaba.re/api/subject/59825/watchedto/{集数}
     相当于网页上的设置进度
-    Authorization: Basic {BASE64 username:password}
+    Authorization: Basic {BASE64(SSL Encode) username:auth}
     
     [return] 同上 
     {
     	request: 
         code: 202 成功
         error: 成功返回"Accepted"
+    }
+    
+获得SSL编码的username和auth
+---
+	[POST] http://netaba.re/api/login
+    [body] Authorization: Basic {BASE64 username:password}
+    
+    [return] Json
+    {
+    	id: 用户UID
+		url: 用户空间URL
+		username: SSL编码后的id?
+		nickname: 用户昵称
+		avatar:{
+			large: 头像、大
+			medium: 头像、中
+			small: 头像、小
+		}
+		sign: 签名
+		auth: SSL编码后的{$AUTH_TOKEN}
+		auth_encode: 不明(也没啥用)
     }
