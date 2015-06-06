@@ -2,6 +2,7 @@ package frezc.bangumitimemachine.app.ui.dialog;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
-import frezc.bangumitimemachine.app.db.DB;
-import frezc.bangumitimemachine.app.entity.BaseAuth;
-import frezc.bangumitimemachine.app.entity.LoginUser;
+import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 
@@ -22,7 +21,7 @@ import frezc.bangumitimemachine.app.network.http.NetWorkTool;
  * Created by freeze on 2015/4/26.
  */
 public class LoginDialog extends DialogFragment
-    implements View.OnClickListener, Response.Listener<LoginUser>
+    implements View.OnClickListener, Response.Listener<User>
                 ,Response.ErrorListener{
     private EditText etEmail,etPassword;
     private TextView tvLoginFail;
@@ -33,8 +32,9 @@ public class LoginDialog extends DialogFragment
     private NetWorkTool netWorkTool;
     private BasicAuth basicAuth;
 
-    private String username;
+    private String email;
     private String password;
+
 
     private OnLoginSuccessListener onLoginSuccessListener;
 
@@ -42,14 +42,14 @@ public class LoginDialog extends DialogFragment
         this.onLoginSuccessListener = onLoginSuccessListener;
     }
 
-    public static LoginDialog newInstance(BaseAuth auth){
+    public static LoginDialog newInstance(@Nullable String email, boolean isAuto,
+                                          OnLoginSuccessListener onLoginSuccessListener){
         LoginDialog loginDialog = new LoginDialog();
-        if(auth != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("username", auth.getUsername());
-            bundle.putString("password", auth.getPassword());
-            loginDialog.setArguments(bundle);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putString("email", email);
+        bundle.putBoolean("isAuto",isAuto);
+        loginDialog.setArguments(bundle);
+        loginDialog.setOnLoginSuccessListener(onLoginSuccessListener);
         return loginDialog;
     }
 
@@ -81,10 +81,8 @@ public class LoginDialog extends DialogFragment
         
         Bundle bundle = getArguments();
         if(bundle != null){
-            etEmail.setText(bundle.getString("username"));
-            etPassword.setText(bundle.getString("password"));
-            autoLogin.setChecked(true);
-            loginButton.performClick();
+            etEmail.setText(bundle.getString("email"));
+            autoLogin.setChecked(bundle.getBoolean("isAuto"));
         }
     }
 
@@ -98,9 +96,9 @@ public class LoginDialog extends DialogFragment
                 }
 
                 if(basicAuth == null){
-                    basicAuth = new BasicAuth(username,password, this, this);
+                    basicAuth = new BasicAuth(email,password, this, this);
                 }else {
-                    basicAuth.setUsernameAndPassword(username,password);
+                    basicAuth.setUsernameAndPassword(email,password);
                 }
 
                 basicAuth.sendRequest(netWorkTool);
@@ -118,9 +116,9 @@ public class LoginDialog extends DialogFragment
 
     //本地简单检查合法性
     private boolean checkAvailable() {
-        username = etEmail.getText().toString();
+        email = etEmail.getText().toString();
         password = etPassword.getText().toString();
-        if(username == null || password == null || username.isEmpty() || password.length()<8){
+        if(email == null || password == null || email.isEmpty() || password.length()<8){
             return false;
         }else {
             return true;
@@ -129,22 +127,14 @@ public class LoginDialog extends DialogFragment
 
     //登录成功
     @Override
-    public void onResponse(LoginUser loginUser) {
+    public void onResponse(User loginUser) {
         if(loginUser.getAuth() == null) {
             setError("用户名和密码不能为空");
         }else {
             Toast.makeText(getActivity(), "登录成功 " + loginUser.getNickname(), Toast.LENGTH_SHORT).show();
-            MyApplication.setLoginUser(loginUser);
-            if(autoLogin.isChecked()){
-                BaseAuth auth = new BaseAuth();
-                auth.setUsername(username);
-                auth.setPassword(password);
-                new DB(getActivity()).saveAuth(auth);
-            }else {
-                new DB(getActivity()).deleteAuth();
-            }
+
             if(onLoginSuccessListener != null){
-                onLoginSuccessListener.onLogin(loginUser);
+                onLoginSuccessListener.onLogin(loginUser, autoLogin.isChecked());
             }
             dismiss();
         }
@@ -173,6 +163,6 @@ public class LoginDialog extends DialogFragment
     }
 
     public interface OnLoginSuccessListener{
-        void onLogin(LoginUser user);
+        void onLogin(User user, boolean isSave);
     }
 }

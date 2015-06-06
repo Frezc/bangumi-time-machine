@@ -8,9 +8,20 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
-    <frezc.loadingdemo.app2.GifView android:layout_width="300dp"
-                                    android:layout_height="300dp"
-                                    android:layout_centerInParent="true"
-            app:src="@drawable/dance"/>
+    <frezc.loadingdemo.app2.SwipeView android:layout_width="match_parent"
+                                      android:layout_height="100dp">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="右拉" android:layout_alignParentLeft="true" android:layout_centerVertical="true"
+                    />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="左拉" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+        </RelativeLayout>
 
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="#f2e" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="这是番剧"/>
+        </LinearLayout>
+    </frezc.loadingdemo.app2.SwipeView>
 </RelativeLayout>

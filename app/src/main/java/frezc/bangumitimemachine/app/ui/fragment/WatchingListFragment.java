@@ -21,6 +21,7 @@ import frezc.bangumitimemachine.app.entity.WatchingSubject;
 import frezc.bangumitimemachine.app.network.http.GsonRequest;
 import frezc.bangumitimemachine.app.network.http.NetParams;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
+import frezc.bangumitimemachine.app.ui.callback.OnItemUpdateListener;
 import frezc.bangumitimemachine.app.ui.list.ListDecoration;
 import frezc.bangumitimemachine.app.ui.list.WatchingListAdapter;
 import frezc.bangumitimemachine.app.ui.callback.OnItemClickListener;
@@ -34,7 +35,8 @@ import java.util.List;
  */
 public class WatchingListFragment extends NetFragment implements
         OnItemClickListener, OnItemLongClickListener,
-        GsonRequest.OnListResponseListener<WatchingSubject>{
+        GsonRequest.OnListResponseListener<WatchingSubject>,
+        OnItemUpdateListener{
 
     private RecyclerView watchingList;
     private ProgressBar progressBar;
@@ -48,6 +50,14 @@ public class WatchingListFragment extends NetFragment implements
         watchingListFragment.setNetWorkTool(NetWorkTool.getInstance(context));
         watchingListFragment.setResetFlag(true);
         return watchingListFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        watchingListAdapter = new WatchingListAdapter(getActivity());
+        watchingListAdapter.setOnItemClickListener(this);
+        watchingListAdapter.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -72,10 +82,6 @@ public class WatchingListFragment extends NetFragment implements
             watchingList.setItemAnimator(new DefaultItemAnimator());
             RecyclerView.ItemDecoration decoration = new ListDecoration(getActivity());
             watchingList.addItemDecoration(decoration);
-
-            watchingListAdapter = new WatchingListAdapter();
-            watchingListAdapter.setOnItemClickListener(this);
-            watchingListAdapter.setOnItemLongClickListener(this);
 
             watchingList.setAdapter(watchingListAdapter);
         }
@@ -112,8 +118,9 @@ public class WatchingListFragment extends NetFragment implements
 
     @Override
     public void refresh(){
-        if(MyApplication.isUserLogin() && isAdded()) {
-            String url = NetParams.getWatchingUrl(MyApplication.getLoginUser().getId());
+        MyApplication app = (MyApplication) getActivity().getApplication();
+        if(app.isUserLogin() && isAdded()) {
+            String url = NetParams.getWatchingUrl(app.getLoginUser().getId());
             netWorkTool.clearCache();
             GsonRequest<WatchingSubject> request = new GsonRequest<WatchingSubject>(getActivity(),
                     Request.Method.GET, url,
@@ -132,11 +139,13 @@ public class WatchingListFragment extends NetFragment implements
         refresh();
     }
 
+    //列表中每项点击
     @Override
     public void onItemClick(View view, int position) {
 
     }
 
+    //列表项
     @Override
     public void onItemLongClick(View view, int position) {
 
@@ -152,5 +161,21 @@ public class WatchingListFragment extends NetFragment implements
     public void onResponse(List<WatchingSubject> response) {
         showList();
         watchingListAdapter.setData(response);
+    }
+
+    /**
+     * 进行评价
+     * @param position
+     * @param status see NetParams
+     */
+    @Override
+    public void onComment(int position, String status) {
+
+    }
+
+    //设置追番进度
+    @Override
+    public void onProgress(int position, int epStatus) {
+
     }
 }

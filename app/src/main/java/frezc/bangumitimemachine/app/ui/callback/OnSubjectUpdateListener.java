@@ -7,4 +7,6 @@ import android.view.View;
  */
 public interface OnSubjectUpdateListener{
     void onSubjectUpdate(View v,int position);
+    void onSubjectDrop(View v,int position);
+    void onSubjectCompelete(View v, int position);
 }

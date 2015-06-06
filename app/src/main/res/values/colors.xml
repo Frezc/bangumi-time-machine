@@ -8,4 +8,11 @@
     
     <!-- calendar colors -->
 
+    <!-- some item colors -->
+    <color name="danger_solid">#d9534f</color>
+    <color name="danger_stroke">#d43f3a</color>
+    <color name="danger_dark_solid">#d2322d</color>
+    <color name="danger_dark_stroke">#ac2925</color>
+    <color name="positive">#14e715</color>
+    <color name="positive_dark">#12c700</color>
 </resources>

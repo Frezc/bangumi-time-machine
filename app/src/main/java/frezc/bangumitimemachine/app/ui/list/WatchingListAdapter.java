@@ -1,13 +1,16 @@
 package frezc.bangumitimemachine.app.ui.list;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.WatchingSubject;
+import frezc.bangumitimemachine.app.network.http.NetParams;
 import frezc.bangumitimemachine.app.ui.callback.OnItemClickListener;
 import frezc.bangumitimemachine.app.ui.callback.OnItemLongClickListener;
+import frezc.bangumitimemachine.app.ui.callback.OnItemUpdateListener;
 import frezc.bangumitimemachine.app.ui.callback.OnSubjectUpdateListener;
 
 import java.util.List;
@@ -18,9 +21,15 @@ import java.util.List;
 public class WatchingListAdapter extends RecyclerView.Adapter<SSubjectViewHolder>
     implements OnSubjectUpdateListener {
 
+    private Context context;
     private List<WatchingSubject> data;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
+    private OnItemUpdateListener onItemUpdateListener;
+
+    public WatchingListAdapter(Context context){
+        this.context = context;
+    }
 
     @Override
     public SSubjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,6 +50,9 @@ public class WatchingListAdapter extends RecyclerView.Adapter<SSubjectViewHolder
         holder.subjectProgress.setMax(subject.getSubject().getEps());
         holder.subjectProgress.setProgress(subject.getEp_status());
         holder.subjectWatchNext.setText("EP."+(subject.getEp_status()+1));
+
+        //设置侧拉距离
+        holder.rootView.setDragLimit(-context.getResources().getDimension(R.dimen.double_block_offset));
     }
 
     public void clearData(){
@@ -79,11 +91,30 @@ public class WatchingListAdapter extends RecyclerView.Adapter<SSubjectViewHolder
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    @Override
-    public void onSubjectUpdate(View v, int position) {
-
+    public void setOnItemUpdateListener(OnItemUpdateListener onItemUpdateListener) {
+        this.onItemUpdateListener = onItemUpdateListener;
     }
 
+    @Override
+    public void onSubjectUpdate(View v, int position) {
+        if(onItemUpdateListener != null){
+            onItemUpdateListener.onProgress(position,data.get(position).getEp_status()+1);
+        }
+    }
+
+    @Override
+    public void onSubjectDrop(View v, int position) {
+        if (onItemUpdateListener != null) {
+            onItemUpdateListener.onComment(position, NetParams.STATUS_DROP);
+        }
+    }
+
+    @Override
+    public void onSubjectCompelete(View v, int position) {
+        if (onItemUpdateListener != null) {
+            onItemUpdateListener.onComment(position, NetParams.STATUS_DONE);
+        }
+    }
 
 
 }

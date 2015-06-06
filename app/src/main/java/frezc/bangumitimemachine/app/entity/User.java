@@ -1,9 +1,11 @@
 package frezc.bangumitimemachine.app.entity;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by freeze on 2015/4/23.
  */
-public class User {
+public class User extends DataSupport{
     private Avatar avatar;
     private int id;
     private String nickname;
@@ -11,15 +13,34 @@ public class User {
     private String url;
     private String username;
 
-    public static class Avatar {
-        public String large;
-        public String medium;
-        public String small;
 
-        @Override
-        public String toString() {
-            return "large:"+large+" medium:"+medium+" small:"+small;
-        }
+    private String auth;
+    private String auth_encode;
+
+    private String netabaAuth;
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
+
+    public String getAuth_encode() {
+        return auth_encode;
+    }
+
+    public void setAuth_encode(String auth_encode) {
+        this.auth_encode = auth_encode;
+    }
+
+    public String getNetabaAuth() {
+        return netabaAuth;
+    }
+
+    public void setNetabaAuth(String netabaAuth) {
+        this.netabaAuth = netabaAuth;
     }
 
     public Avatar getAvatar() {

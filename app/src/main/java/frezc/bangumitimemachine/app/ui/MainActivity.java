@@ -20,8 +20,7 @@ import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.db.DB;
 import frezc.bangumitimemachine.app.entity.BaseAuth;
-import frezc.bangumitimemachine.app.entity.LoginUser;
-import frezc.bangumitimemachine.app.network.http.BasicAuth;
+import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
@@ -47,7 +46,7 @@ public class MainActivity extends ActionBarActivity
     private ImageLoader.ImageContainer photoRequest;
     //侧边栏列表
     private LinearLayout sectionContainter;
-//    private MyApplication app;
+    private MyApplication app;
     private DrawerLayout drawerLayout;
     private FrameLayout mainContainer;
 
@@ -66,22 +65,21 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        app = (MyApplication) getApplication();
+        app = (MyApplication) getApplication();
 
         initView();
         initSections();
         initFragment(savedInstanceState);
-        autoLogin();
+        checkUserAvailable();
     }
 
-    private void autoLogin() {
-        BaseAuth auth = new DB(this).getAuth();
-        if(auth != null){
-            LoginDialog ld = LoginDialog.newInstance(auth);
-            ld.setOnLoginSuccessListener(this);
-            ld.show(getSupportFragmentManager(), "dialog_login");
-        }
+    /**
+     * 检查自动登录时的账号密码是否可用
+     */
+    private void checkUserAvailable() {
+
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -238,10 +236,10 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_photo:
-                if(MyApplication.isUserLogin()) {
+                if(app.isUserLogin()) {
 
                 }else {
-                    LoginDialog ld = LoginDialog.newInstance(null);
+                    LoginDialog ld = LoginDialog.newInstance(null,false,this);
                     ld.setOnLoginSuccessListener(this);
                     ld.show(getSupportFragmentManager(), "dialog_login");
                 }
@@ -340,7 +338,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onLogin(LoginUser user) {
+    public void onLogin(User user, boolean isSave) {
+        app.clearUser();
+        if(isSave){
+            user.save();
+        }
         username.setText(user.getNickname());
         if(user.getSign().isEmpty()){
             sign.setText(R.string.default_sign);

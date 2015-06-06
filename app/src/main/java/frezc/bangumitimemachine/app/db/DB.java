@@ -7,8 +7,8 @@ import frezc.bangumitimemachine.app.entity.BaseAuth;
 
 /**
  * Created by freeze on 2015/5/18.
- * 单例类
  */
+@Deprecated
 public class DB {
     private DBHelper helper;
 
