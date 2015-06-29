@@ -14,9 +14,13 @@ import java.util.Map;
  * 未加密
  */
 public class BasicAuth {
-    private GsonRequest<User> gsonRequest;
-    private Response.Listener<User> successListener;
-    private Response.ErrorListener errorListener;
+    private GsonRequest<User> userInfoRequest,userNetabaRequest;
+    private final Response.Listener<User> successListener;
+    private final Response.ErrorListener errorListener;
+
+    private NetWorkTool netWorkTool;
+
+    private User user;
 
     public final Map<String, String> authHeaders = new HashMap<String, String>();
 
@@ -25,8 +29,35 @@ public class BasicAuth {
         authHeaders.put("Accept-Encoding","gzip");
         authHeaders.put("User-Agent", "android-async-http/1.4.1 (http://loopj.com/android-async-http)");
         authHeaders.put("Authorization", "Basic "+getBASE64(username+":"+password));
-        gsonRequest = new GsonRequest<User>(Request.Method.POST, NetParams.AUTH_URL,
-                User.class, authHeaders, successListener, errorListener);
+
+        this.successListener = successListener;
+        this.errorListener = errorListener;
+
+        userInfoRequest = new GsonRequest<User>(Request.Method.POST, NetParams.AUTH_URL,
+                User.class, authHeaders, new Response.Listener<User>() {
+            @Override
+            public void onResponse(User user) {
+                if(user == null || user.getAuth() == null){
+                    BasicAuth.this.successListener.onResponse(user);
+                }else {
+                    BasicAuth.this.user = user;
+                    requestNetabareAuth();
+                }
+            }
+        }, errorListener);
+    }
+
+    private void requestNetabareAuth(){
+        userNetabaRequest = new GsonRequest<User>(Request.Method.POST, NetParams.NETABARE_AUTH,
+                User.class, authHeaders, new Response.Listener<User>() {
+            @Override
+            public void onResponse(User user) {
+                BasicAuth.this.user.setNetabaAuth(user.getUsername()+":"+user.getAuth());
+                successListener.onResponse(BasicAuth.this.user);
+            }
+        }, errorListener);
+
+        netWorkTool.addToRequestQueue(userNetabaRequest);
     }
 
     public void setUsernameAndPassword(String username, String password){
@@ -37,11 +68,16 @@ public class BasicAuth {
     }
 
     public void sendRequest(NetWorkTool netWorkTool){
-        netWorkTool.addToRequestQueue(gsonRequest);
+        this.netWorkTool = netWorkTool;
+        netWorkTool.addToRequestQueue(userInfoRequest);
     }
 
     public void cancel(){
-        gsonRequest.cancel();
+        userInfoRequest.cancel();
+
+        if(userNetabaRequest != null){
+            userNetabaRequest.cancel();
+        }
     }
 
     public String getBASE64(String s){

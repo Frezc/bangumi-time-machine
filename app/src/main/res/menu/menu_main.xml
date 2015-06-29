@@ -18,5 +18,7 @@
             android:orderInCategory="80"
             android:icon="@drawable/abc_edit_text_material"
             app:showAsAction="ifRoom"/>
-
+      <item android:id="@+id/action_logout"
+              android:title="退出登录"
+              app:showAsAction="never"></item>
 </menu>

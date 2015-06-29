@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.*;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
 import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.network.http.BasicAuth;
@@ -129,7 +128,7 @@ public class LoginDialog extends DialogFragment
     @Override
     public void onResponse(User loginUser) {
         if(loginUser.getAuth() == null) {
-            setError("用户名和密码不能为空");
+            setError("用户名或密码错误");
         }else {
             Toast.makeText(getActivity(), "登录成功 " + loginUser.getNickname(), Toast.LENGTH_SHORT).show();
 

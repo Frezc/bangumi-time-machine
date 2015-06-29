@@ -8,4 +8,6 @@
     <string name="cannot_find_pic">图片丢失</string>
 
     <string name="default_sign">什么都没留下</string>
+    
+    <string name="not_login_in">未登录</string>
 </resources>

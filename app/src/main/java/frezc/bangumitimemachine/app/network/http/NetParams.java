@@ -29,6 +29,9 @@ public class NetParams {
     public static final String STATUS_URL_DONE = "watched";
     public static final String STATUS_URL_DROP = "drop";
 
+    //netaba.re的URL
+    public static final String NETABARE_AUTH = "http://netaba.re/api/login";
+
     public static String getWatchingUrl(int uid){
         return USER_URL + "/" + uid + "/collection?cat=watching";
     }

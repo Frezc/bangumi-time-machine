@@ -1,5 +1,8 @@
 package frezc.bangumitimemachine.app.ui;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,17 +13,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import frezc.bangumitimemachine.app.MyApplication;
 import frezc.bangumitimemachine.app.R;
-import frezc.bangumitimemachine.app.db.DB;
-import frezc.bangumitimemachine.app.entity.BaseAuth;
+import frezc.bangumitimemachine.app.entity.Avatar;
+import frezc.bangumitimemachine.app.entity.Notify;
 import frezc.bangumitimemachine.app.entity.User;
+import frezc.bangumitimemachine.app.network.http.GsonRequest;
+import frezc.bangumitimemachine.app.network.http.NetParams;
 import frezc.bangumitimemachine.app.network.http.NetWorkTool;
 import frezc.bangumitimemachine.app.ui.customview.DivisorView;
 import frezc.bangumitimemachine.app.ui.customview.SubheaderView;
@@ -30,8 +39,12 @@ import frezc.bangumitimemachine.app.ui.fragment.CalendarFragment;
 import frezc.bangumitimemachine.app.ui.fragment.NetFragment;
 import frezc.bangumitimemachine.app.ui.fragment.WatchingListFragment;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 public class MainActivity extends ActionBarActivity
@@ -67,18 +80,49 @@ public class MainActivity extends ActionBarActivity
 
         app = (MyApplication) getApplication();
 
+        checkUserAvailable();
+
         initView();
         initSections();
         initFragment(savedInstanceState);
-        checkUserAvailable();
+
     }
 
     /**
      * 检查自动登录时的账号密码是否可用
      */
     private void checkUserAvailable() {
-
+        if(app.isUserLogin()){
+            GsonRequest<Notify> notifyRequest = new GsonRequest<Notify>(Request.Method.GET,
+                    NetParams.getNotifyUrl(app.getLoginUser().getAuth_encode()), Notify.class, null,
+                    new Response.Listener<Notify>() {
+                        @Override
+                        public void onResponse(Notify notify) {
+                            if(notify != null && notify.getCode() == 200){
+                                notifyLogin();
+                                if(notify.getCount() > 0){
+                                    NotificationManager notificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    Notification notification = new Notification(android.R.drawable.stat_notify_chat,
+                                            "收到消息",System.currentTimeMillis());
+                                    notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                                    notificationManager.notify(0, notification);
+                                }
+                            }else {
+                                Toast.makeText(MainActivity.this, "用户已过期, 请重新登录", Toast.LENGTH_SHORT).show();
+                                app.logout();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Toast.makeText(MainActivity.this, "获取消息失败，请检查网络", Toast.LENGTH_SHORT).show();
+                }
+            });
+            NetWorkTool.getInstance(this).addToRequestQueue(notifyRequest);
+        }
     }
+
 
 
     @Override
@@ -225,6 +269,36 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    /**
+     * 更新用户信息
+     */
+    private void notifyLogin(){
+        if(app.isUserLogin()){
+            User user = app.getLoginUser();
+            Log.i("Test",user.toString());
+            username.setText(user.getNickname());
+            if(user.getSign().isEmpty()){
+                sign.setText(R.string.default_sign);
+            }else {
+                sign.setText(user.getSign());
+            }
+            Log.i("Test", ""+user.toString());
+            if(user.getAvatar() == null){
+                user.setAvatar(new Avatar());
+            }
+            photoRequest =  NetWorkTool.getInstance(this).loadImage(user.getAvatar().small,
+                    ImageLoader.getImageListener(photo,R.mipmap.ico_ios,R.mipmap.icon));
+            //重置fragment
+            if(watchingListFragment != null){
+                watchingListFragment.setResetFlag(true);
+            }
+        }else {
+            photo.setImageResource(R.mipmap.icon);
+            username.setText(getResources().getString(R.string.not_login_in));
+            sign.setText(getResources().getString(R.string.default_sign));
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -240,7 +314,6 @@ public class MainActivity extends ActionBarActivity
 
                 }else {
                     LoginDialog ld = LoginDialog.newInstance(null,false,this);
-                    ld.setOnLoginSuccessListener(this);
                     ld.show(getSupportFragmentManager(), "dialog_login");
                 }
                 break;
@@ -329,6 +402,11 @@ public class MainActivity extends ActionBarActivity
                 contentFragment.onRefresh();
                 msg = "refresh!";
                 break;
+            case R.id.action_logout:
+                app.logout();
+                watchingListFragment.setResetFlag(true);
+                notifyLogin();
+                break;
         }
 
         if(msg != null && !msg.equals("")) {
@@ -337,24 +415,21 @@ public class MainActivity extends ActionBarActivity
         return true;
     }
 
+
+
+
     @Override
     public void onLogin(User user, boolean isSave) {
+        Log.i("Test", "MainActivity.onLogin:" + "user = [" + user + "], isSave = [" + isSave + "]");
+
+        System.out.println("user = [" + user + "], isSave = [" + isSave + "]");
+
         app.clearUser();
         if(isSave){
             user.save();
         }
-        username.setText(user.getNickname());
-        if(user.getSign().isEmpty()){
-            sign.setText(R.string.default_sign);
-        }else {
-            sign.setText(user.getSign());
-        }
-        photoRequest =  NetWorkTool.getInstance(this).loadImage(user.getAvatar().small,
-                ImageLoader.getImageListener(photo,R.mipmap.ico_ios,R.mipmap.icon));
-        //重置fragment
-        if(watchingListFragment != null){
-            watchingListFragment.setResetFlag(true);
-        }
+        app.setLoginUser(user);
+        notifyLogin();
     }
 
     @Override
@@ -364,4 +439,5 @@ public class MainActivity extends ActionBarActivity
             photoRequest.cancelRequest();
         }
     }
+
 }

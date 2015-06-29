@@ -27,6 +27,11 @@ public class MyApplication extends LitePalApplication {
         return loginUser != null;
     }
 
+    public void logout(){
+        loginUser = null;
+        clearUser();
+    }
+
     public void clearUser(){
         DataSupport.deleteAll(User.class);
     }
@@ -38,6 +43,8 @@ public class MyApplication extends LitePalApplication {
         UIParams.density = getResources().getDisplayMetrics().density;
 
         List<User> list = DataSupport.findAll(User.class);
-        loginUser = list.get(0);
+        if(list.size() > 0) {
+            loginUser = list.get(0);
+        }
     }
 }
