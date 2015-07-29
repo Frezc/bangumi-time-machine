@@ -1,5 +1,8 @@
 package frezc.bangumitimemachine.app;
 
+import android.database.sqlite.SQLiteException;
+import android.util.Log;
+import frezc.bangumitimemachine.app.entity.Avatar;
 import frezc.bangumitimemachine.app.entity.User;
 import frezc.bangumitimemachine.app.ui.UIParams;
 import org.litepal.LitePalApplication;
@@ -33,7 +36,11 @@ public class MyApplication extends LitePalApplication {
     }
 
     public void clearUser(){
-        DataSupport.deleteAll(User.class);
+        try {
+            DataSupport.deleteAll(User.class);
+        }catch (SQLiteException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -45,6 +52,7 @@ public class MyApplication extends LitePalApplication {
         List<User> list = DataSupport.findAll(User.class);
         if(list.size() > 0) {
             loginUser = list.get(0);
+            Log.i("Test", ""+loginUser);
         }
     }
 }

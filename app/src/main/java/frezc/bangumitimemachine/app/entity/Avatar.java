@@ -6,9 +6,33 @@ import org.litepal.crud.DataSupport;
  * Created by freeze on 2015/6/6.
  */
 public class Avatar extends DataSupport {
-    public String large = "";
-    public String medium = "";
-    public String small = "";
+    private String large = "";
+    private String medium = "";
+    private String small = "";
+
+    public String getLarge() {
+        return large;
+    }
+
+    public void setLarge(String large) {
+        this.large = large;
+    }
+
+    public String getMedium() {
+        return medium;
+    }
+
+    public void setMedium(String medium) {
+        this.medium = medium;
+    }
+
+    public String getSmall() {
+        return small;
+    }
+
+    public void setSmall(String small) {
+        this.small = small;
+    }
 
     @Override
     public String toString() {

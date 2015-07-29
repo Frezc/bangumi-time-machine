@@ -1,23 +1,28 @@
 package frezc.bangumitimemachine.app.entity;
 
+import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
 import org.litepal.crud.DataSupport;
 
 /**
  * Created by freeze on 2015/4/23.
  */
-public class User extends DataSupport{
-    private Avatar avatar;
-    private int id;
-    private String nickname;
-    private String sign;
-    private String url;
-    private String username;
+public class User extends SugarRecord<User>{
+    Avatar avatar;
+    @SerializedName("id")
+    String uid;
+    String nickname;
+    String sign;
+    String url;
+    String username;
 
 
-    private String auth;
-    private String auth_encode;
+    String auth;
+    String auth_encode;
 
-    private String netabaAuth;
+    String netabaAuth;
+
+    public User(){}
 
     public String getAuth() {
         return auth;
@@ -51,12 +56,12 @@ public class User extends DataSupport{
         this.avatar = avatar;
     }
 
-    public int getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getNickname() {

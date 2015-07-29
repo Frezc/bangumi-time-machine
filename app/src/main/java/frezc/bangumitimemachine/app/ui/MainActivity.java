@@ -282,11 +282,10 @@ public class MainActivity extends ActionBarActivity
             }else {
                 sign.setText(user.getSign());
             }
-            Log.i("Test", ""+user.toString());
             if(user.getAvatar() == null){
                 user.setAvatar(new Avatar());
             }
-            photoRequest =  NetWorkTool.getInstance(this).loadImage(user.getAvatar().small,
+            photoRequest =  NetWorkTool.getInstance(this).loadImage(user.getAvatar().getSmall(),
                     ImageLoader.getImageListener(photo,R.mipmap.ico_ios,R.mipmap.icon));
             //重置fragment
             if(watchingListFragment != null){
@@ -426,6 +425,7 @@ public class MainActivity extends ActionBarActivity
 
         app.clearUser();
         if(isSave){
+            user.getAvatar().save();
             user.save();
         }
         app.setLoginUser(user);
